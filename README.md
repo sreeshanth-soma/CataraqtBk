@@ -1,27 +1,91 @@
-# Womanium-CataraQt
-Quantum-powered Cataract Detection :  Learn Quantum and Save Eyes 
+# Quantum Eye Disease Classifier
 
+A web application that uses quantum-classical hybrid machine learning to detect cataracts in eye images.
 
-Welcome to the Womanium-CataraQt repo
+## Features
 
+- Modern, responsive web interface
+- Drag-and-drop image upload
+- Real-time image preview
+- Quantum-classical hybrid model for cataract detection
+- Confidence score for predictions
 
-Description and objectives
+## Prerequisites
 
-Womanium CataraQt is a Quantum Machine Learning project for remote and reliable detection of cataracts, inspired by the Womanium Global Quantum Program.
+- Python 3.8 or higher
+- pip (Python package installer)
 
-This project aims to employ a mix of Quantum and Classical Machine Learning techniques to detect the presence of cataracts without continual medical intervention or specialized optical equipment. Quantum Classical Convolutional Neural Networks, Quantum Support Vector Machine and Hybrid Quantum feature selection algorithm are some candidates for implementation and performance assessment. 
+## Installation
 
-Cataract is documented to be the major cause of avoidable blindness in India, accounting for 51% of the bilaterally blind here. Elsewhere in the world, too, the situation is similar. 10 million is the number of cataract blind people in India in 2020, with an annual incidence of 4 million, as per surveys and estimates. If the disease is detected faster, remotely and reliably, scarce medical resources could be reallocated more efficiently for surgical intervention and improved quality of life in not-so-developed rural areas.
- 
-Another equally important objective of this project is Quantum Outreach. Come and learn with us!  We provide annotated datasets of eye images, easy-to-follow tutorials on quantum basics, links to training material, tools and sample software modules as well as one-on-one guidance on writing your QML program. 
+1. Clone the repository:
 
-Thank you @WOMANIUM for starting us on our quantum journey and enabling this exciting open-source project!
+```bash
+git clone <repository-url>
+cd <repository-name>
+```
 
+2. Create a virtual environment (recommended):
 
-Contributing
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows, use: venv\Scripts\activate
+```
 
-We are excited to work alongside you.  Feel free to contribute and make a social impact !
+3. Install the required packages:
 
-Communicating with the Team
+```bash
+pip install -r requirements.txt
+```
 
-Communicate with the team via GitHub issues.
+## Usage
+
+1. Start the Flask application:
+
+```bash
+python app.py
+```
+
+2. Open your web browser and navigate to:
+
+```
+http://localhost:5000
+```
+
+3. Upload an eye image by either:
+
+   - Dragging and dropping an image onto the upload area
+   - Clicking the "Browse Files" button to select an image
+
+4. The application will process the image and display:
+   - The prediction (Cataract or Normal)
+   - The confidence score of the prediction
+
+## Project Structure
+
+```
+.
+├── app.py                 # Flask application
+├── templates/
+│   └── index.html        # Web interface template
+├── static/
+│   └── uploads/          # Temporary storage for uploaded images
+├── requirements.txt      # Python dependencies
+└── README.md            # This file
+```
+
+## Technical Details
+
+The application uses:
+
+- Flask for the web server
+- Qiskit for quantum computing components
+- PyTorch for classical neural network components
+- TailwindCSS for styling
+
+## License
+
+[Your chosen license]
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.

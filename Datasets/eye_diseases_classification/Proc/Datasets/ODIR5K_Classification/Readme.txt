@@ -1,0 +1,1 @@
+This is a subset of the Kaggle dataset in https://www.kaggle.com/datasets/tanjemahamed/odir5k-classification

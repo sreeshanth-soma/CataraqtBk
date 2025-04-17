@@ -1,0 +1,259 @@
+{% extends "base.html" %} {% block title %}Analyze Eye Image - CataraQt{%
+endblock %} {% block content %}
+<div id="vanta-background" class="min-h-screen">
+  <div class="container mx-auto px-4 py-8">
+    <!-- Upload Section -->
+    <div class="bg-white/80 backdrop-blur-sm rounded-lg shadow-lg p-6 mb-8">
+      <h2 class="text-2xl font-bold mb-4 text-gray-800">
+        Upload Image for Analysis
+      </h2>
+      <form id="upload-form" class="space-y-4">
+        <div class="flex items-center justify-center w-full">
+          <label
+            for="file-upload"
+            class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-white/50 hover:bg-white/70 transition-all"
+          >
+            <div class="flex flex-col items-center justify-center pt-5 pb-6">
+              <svg
+                class="w-10 h-10 mb-3 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                ></path>
+              </svg>
+              <p class="mb-2 text-sm text-gray-500">
+                <span class="font-semibold">Click to upload</span> or drag and
+                drop
+              </p>
+              <p class="text-xs text-gray-500">
+                PNG, JPG or JPEG (MAX. 800x400px)
+              </p>
+            </div>
+            <input
+              id="file-upload"
+              type="file"
+              class="hidden"
+              accept="image/*"
+            />
+          </label>
+        </div>
+      </form>
+    </div>
+
+    <!-- Results Section (Initially Hidden) -->
+    <div id="results" class="hidden space-y-8">
+      <!-- Prediction Results -->
+      <div class="bg-white/80 backdrop-blur-sm rounded-lg shadow-lg p-6">
+        <h3 class="text-xl font-bold mb-4 text-gray-800">Analysis Results</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="space-y-4">
+            <div class="p-4 rounded-lg bg-white/90">
+              <p class="text-lg font-semibold text-gray-800">Prediction:</p>
+              <p
+                id="prediction-result"
+                class="text-xl font-bold text-blue-600"
+              ></p>
+            </div>
+            <div class="p-4 rounded-lg bg-white/90">
+              <p class="text-lg font-semibold text-gray-800">Confidence:</p>
+              <div class="relative pt-1">
+                <div
+                  class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-gray-200"
+                >
+                  <div
+                    id="confidence-bar"
+                    class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-500 transition-all duration-500"
+                  ></div>
+                </div>
+                <p
+                  id="confidence-value"
+                  class="text-right text-blue-600 font-semibold"
+                ></p>
+              </div>
+            </div>
+          </div>
+          <div class="space-y-4">
+            <div class="p-4 rounded-lg bg-white/90">
+              <p class="text-lg font-semibold text-gray-800 mb-2">
+                Recommendations:
+              </p>
+              <ul
+                id="recommendations-list"
+                class="list-disc list-inside space-y-2 text-gray-700"
+              ></ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Visualizations -->
+      <div class="bg-white/80 backdrop-blur-sm rounded-lg shadow-lg p-6">
+        <h3 class="text-xl font-bold mb-4 text-gray-800 dark:text-white">
+          Visualizations
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <p class="font-semibold mb-2">Original Image</p>
+            <img
+              id="original-image"
+              class="w-full rounded-lg shadow-md"
+              alt="Original Image"
+            />
+          </div>
+          <div>
+            <p class="font-semibold mb-2">Activation Map</p>
+            <img
+              id="heatmap-image"
+              class="w-full rounded-lg shadow-md"
+              alt="Activation Map"
+            />
+          </div>
+          <div>
+            <p class="font-semibold mb-2">Overlay Visualization</p>
+            <img
+              id="overlay-image"
+              class="w-full rounded-lg shadow-md"
+              alt="Overlay Visualization"
+            />
+          </div>
+          <div>
+            <p class="font-semibold mb-2">Edge Detection</p>
+            <img
+              id="edges-image"
+              class="w-full rounded-lg shadow-md"
+              alt="Edge Detection"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading Spinner (Initially Hidden) -->
+    <div
+      id="loading"
+      class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50"
+    >
+      <div
+        class="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"
+      ></div>
+    </div>
+  </div>
+</div>
+
+{% endblock %} {% block scripts %}
+<!-- Vanta.js Dependencies -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.rings.min.js"></script>
+
+<script>
+  // Initialize Vanta.js background
+  window.currentVantaEffect = VANTA.RINGS({
+    el: "#vanta-background",
+    mouseControls: true,
+    touchControls: true,
+    gyroControls: false,
+    minHeight: 200.0,
+    minWidth: 200.0,
+    scale: 1.0,
+    scaleMobile: 1.0,
+    color: 0x88ff00,
+    backgroundColor: document.documentElement.classList.contains("dark")
+      ? 0x151515
+      : 0x202428,
+    backgroundAlpha: 1,
+  });
+
+  // File upload and analysis logic
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("upload-form");
+    const fileInput = document.getElementById("file-upload");
+    const loading = document.getElementById("loading");
+    const results = document.getElementById("results");
+
+    fileInput.addEventListener("change", async function (e) {
+      e.preventDefault();
+      const file = fileInput.files[0];
+      if (!file) return;
+
+      // Show loading spinner
+      loading.classList.remove("hidden");
+      results.classList.add("hidden");
+
+      const formData = new FormData();
+      formData.append("file", file);
+
+      try {
+        const response = await fetch("/analyze", {
+          method: "POST",
+          body: formData,
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          // Update prediction and confidence
+          document.getElementById("prediction-result").textContent =
+            data.prediction;
+          document.getElementById("confidence-value").textContent = `${(
+            data.confidence * 100
+          ).toFixed(1)}%`;
+          document.getElementById("confidence-bar").style.width = `${
+            data.confidence * 100
+          }%`;
+
+          // Update recommendations
+          const recommendationsList = document.getElementById(
+            "recommendations-list"
+          );
+          recommendationsList.innerHTML = "";
+          data.recommendations.forEach((rec) => {
+            const li = document.createElement("li");
+            li.textContent = rec;
+            recommendationsList.appendChild(li);
+          });
+
+          // Update Visualizations (handle nulls)
+          document.getElementById("original-image").src =
+            "data:image/png;base64," + data.visualizations.original;
+          document.getElementById("edges-image").src =
+            "data:image/png;base64," + data.visualizations.edges;
+
+          const heatmapImg = document.getElementById("heatmap-image");
+          const overlayImg = document.getElementById("overlay-image");
+
+          if (data.visualizations.heatmap) {
+            heatmapImg.src =
+              "data:image/png;base64," + data.visualizations.heatmap;
+          } else {
+            heatmapImg.alt = "Heatmap not available";
+          }
+
+          if (data.visualizations.overlay) {
+            overlayImg.src =
+              "data:image/png;base64," + data.visualizations.overlay;
+          } else {
+            overlayImg.alt = "Overlay not available";
+          }
+
+          // Show results
+          results.classList.remove("hidden");
+        } else {
+          alert(`Error: ${data.error || "Unknown error"}`);
+        }
+      } catch (error) {
+        console.error("Analysis error:", error);
+        alert("An error occurred during analysis. Please check the console.");
+      } finally {
+        loading.classList.add("hidden");
+      }
+    });
+  });
+</script>
+{% endblock %}

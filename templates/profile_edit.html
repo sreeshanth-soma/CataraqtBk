@@ -1,0 +1,87 @@
+{% extends "base.html" %} {% block title %}Edit Profile - CataraQt{% endblock %}
+{% block content %}
+<div
+  class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 py-12 px-4 sm:px-6 lg:px-8"
+>
+  <div class="max-w-7xl mx-auto">
+    <!-- Header Section -->
+    <div class="text-center mb-12 animate-fade-up">
+      <h1 class="text-4xl font-bold text-gray-900 mb-4">Edit Profile</h1>
+      <p class="text-xl text-gray-600">Update your account information</p>
+    </div>
+
+    <!-- Edit Form -->
+    <div class="bg-white rounded-2xl shadow-xl p-8 animate-fade-up">
+      <form method="POST" class="space-y-6">
+        <!-- Name Field -->
+        <div>
+          <label for="name" class="block text-sm font-medium text-gray-700"
+            >Name</label
+          >
+          <div class="mt-1">
+            <input
+              type="text"
+              name="name"
+              id="name"
+              value="{{ user.name }}"
+              required
+              class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+            />
+          </div>
+        </div>
+
+        <!-- Current Password Field -->
+        <div>
+          <label
+            for="current_password"
+            class="block text-sm font-medium text-gray-700"
+            >Current Password</label
+          >
+          <div class="mt-1">
+            <input
+              type="password"
+              name="current_password"
+              id="current_password"
+              required
+              class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+            />
+          </div>
+        </div>
+
+        <!-- New Password Field -->
+        <div>
+          <label
+            for="new_password"
+            class="block text-sm font-medium text-gray-700"
+            >New Password (leave blank to keep current)</label
+          >
+          <div class="mt-1">
+            <input
+              type="password"
+              name="new_password"
+              id="new_password"
+              class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+            />
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex justify-end space-x-4">
+          <a
+            href="{{ url_for('profile') }}"
+            class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
+            Cancel
+          </a>
+          <button
+            type="submit"
+            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
+            Save Changes
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

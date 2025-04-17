@@ -1,0 +1,89 @@
+{% extends "base.html" %} {% block title %}Login - CataraQt{% endblock %} {%
+block content %}
+<!-- Main container with Vanta.js background -->
+<div
+  id="vanta-bg"
+  class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8"
+>
+  <div
+    class="max-w-md w-full space-y-6 bg-white dark:bg-gray-800 p-8 md:p-10 rounded-xl shadow-2xl relative z-10"
+  >
+    <div class="text-center">
+      <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white">
+        Sign in to your account
+      </h2>
+    </div>
+    <form class="mt-8 space-y-6" action="{{ url_for('login') }}" method="POST">
+      <input type="hidden" name="remember" value="true" />
+      <div class="space-y-4">
+        <div>
+          <label for="username" class="sr-only">Username</label>
+          <input
+            id="username"
+            name="username"
+            type="text"
+            required
+            class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 dark:focus:border-blue-400 sm:text-sm"
+            placeholder="Username"
+          />
+        </div>
+        <div>
+          <label for="password" class="sr-only">Password</label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            autocomplete="current-password"
+            required
+            class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 dark:focus:border-blue-400 sm:text-sm"
+            placeholder="Password"
+          />
+        </div>
+      </div>
+
+      <div class="text-sm text-center">
+        <a
+          href="{{ url_for('register') }}"
+          class="font-medium text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300"
+        >
+          Don't have an account? Register
+        </a>
+      </div>
+
+      <div>
+        <button
+          type="submit"
+          class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-800 transition duration-150 ease-in-out"
+        >
+          Sign in
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %} {% block scripts %}
+<!-- Vanta.js scripts -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.clouds.min.js"></script>
+<script>
+  // Initialize Vanta.js cloud animation
+  document.addEventListener("DOMContentLoaded", () => {
+    VANTA.CLOUDS({
+      el: "#vanta-bg",
+      mouseControls: true,
+      touchControls: true,
+      gyroControls: false,
+      minHeight: 200.0,
+      minWidth: 200.0,
+      backgroundColor: 0xffffff,
+      skyColor: 0x68b8d7,
+      cloudColor: 0xadc1de,
+      cloudShadowColor: 0x183550,
+      sunColor: 0xff9919,
+      sunGlareColor: 0xff6633,
+      sunlightColor: 0xff9933,
+      speed: 1,
+    });
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,99 @@
+{% extends "base.html" %} {% block title %}Analysis Details - CataraQt{%
+endblock %} {% block content %}
+<div class="container mx-auto px-4 py-8">
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 md:p-8">
+    <h2 class="text-2xl font-bold mb-6 text-gray-800 dark:text-white">
+      Analysis Details (ID: {{ analysis.id }})
+    </h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div>
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+          Analyzed Image
+        </h3>
+        {% if analysis.image_path %}
+        <img
+          src="{{ url_for('serve_upload', filename=analysis.image_path) }}"
+          alt="Analyzed eye image for analysis {{ analysis.id }}"
+          class="w-full rounded-lg shadow-md object-contain max-h-96 border border-gray-200 dark:border-gray-700"
+        />
+        {% else %}
+        <div
+          class="flex items-center justify-center h-64 bg-gray-100 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600"
+        >
+          <p class="text-gray-500 dark:text-gray-400">Image not available</p>
+        </div>
+        {% endif %}
+      </div>
+
+      <div class="space-y-6">
+        <div class="p-4 rounded-lg bg-gray-50 dark:bg-gray-700">
+          <p class="text-sm font-medium text-gray-500 dark:text-gray-400">
+            Analysis Date
+          </p>
+          <p class="text-lg font-semibold text-gray-900 dark:text-white">
+            {{ analysis.created_at.strftime('%Y-%m-%d %H:%M:%S') }}
+          </p>
+        </div>
+        <div class="p-4 rounded-lg bg-gray-50 dark:bg-gray-700">
+          <p class="text-sm font-medium text-gray-500 dark:text-gray-400">
+            Prediction Result
+          </p>
+          <p
+            class="text-lg font-semibold {% if 'No' in analysis.prediction %}text-green-600 dark:text-green-400{% else %}text-red-600 dark:text-red-400{% endif %}"
+          >
+            {{ analysis.prediction }}
+          </p>
+        </div>
+        <div class="p-4 rounded-lg bg-gray-50 dark:bg-gray-700">
+          <p class="text-sm font-medium text-gray-500 dark:text-gray-400">
+            Confidence Score
+          </p>
+          <p class="text-lg font-semibold text-gray-900 dark:text-white">
+            {{ "%.2f"|format(analysis.confidence * 100) }}%
+          </p>
+        </div>
+        <div class="p-4 rounded-lg bg-gray-50 dark:bg-gray-700">
+          <h3 class="text-lg font-semibold mb-3 text-gray-900 dark:text-white">
+            Recommendations
+          </h3>
+          {% if recommendations %}
+          <ul
+            class="list-disc list-inside space-y-2 text-gray-700 dark:text-gray-300"
+          >
+            {% for rec in recommendations %}
+            <li>{{ rec }}</li>
+            {% endfor %}
+          </ul>
+          {% else %}
+          <p class="text-gray-500 dark:text-gray-400">
+            No specific recommendations available.
+          </p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-8 text-center">
+      <a
+        href="{{ url_for('history') }}"
+        class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-5 rounded-md transition-colors duration-300"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5 inline-block mr-1 -mt-1"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
+            clip-rule="evenodd"
+          />
+        </svg>
+        Back to History
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

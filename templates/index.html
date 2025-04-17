@@ -1,0 +1,442 @@
+{% extends "base.html" %} {% block title %}CataraQt - Quantum Eye Disease
+Classifier{% endblock %} {% block content %}
+<div
+  class="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50"
+>
+  <!-- Hero Section -->
+  <div class="relative overflow-hidden">
+    <div class="max-w-7xl mx-auto">
+      <div
+        class="relative z-10 pb-8 sm:pb-16 md:pb-20 lg:max-w-2xl lg:w-full lg:pb-28 xl:pb-32"
+      >
+        <main
+          class="mt-10 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28"
+        >
+          <div class="sm:text-center lg:text-left">
+            <h1
+              class="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl"
+            >
+              <span class="block">Quantum-Powered</span>
+              <span class="block text-blue-600">Eye Disease Detection</span>
+            </h1>
+            <p
+              class="mt-3 text-base text-gray-500 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0"
+            >
+              Advanced cataract detection using quantum-classical hybrid machine
+              learning. Upload an eye image and get instant analysis with high
+              accuracy.
+            </p>
+            <div
+              class="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start"
+            >
+              <div class="rounded-md shadow">
+                <a
+                  href="{{ url_for('analyze_image') }}"
+                  class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 md:py-4 md:text-lg md:px-10 transition-all duration-300 transform hover:scale-105"
+                >
+                  Analyze Image
+                </a>
+              </div>
+              <div class="mt-3 sm:mt-0 sm:ml-3">
+                <a
+                  href="{{ url_for('login') }}"
+                  class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 md:py-4 md:text-lg md:px-10 transition-all duration-300 transform hover:scale-105"
+                >
+                  Sign In
+                </a>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+    <div class="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
+      <div
+        class="h-56 w-full bg-blue-500 sm:h-72 md:h-96 lg:w-full lg:h-full relative overflow-hidden"
+      >
+        <div class="absolute inset-0 flex items-center justify-center">
+          <div class="eyes-container">
+            <div class="eye-container">
+              <canvas id="eye-canvas-left"></canvas>
+            </div>
+            <div class="eye-container">
+              <canvas id="eye-canvas-right"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Features Section -->
+  <div class="py-12 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="lg:text-center">
+        <h2
+          class="text-base text-blue-600 font-semibold tracking-wide uppercase"
+        >
+          Features
+        </h2>
+        <p
+          class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl"
+        >
+          A Better Way to Detect Eye Diseases
+        </p>
+        <p class="mt-4 max-w-2xl text-xl text-gray-500 lg:mx-auto">
+          Our quantum-classical hybrid approach combines the best of both worlds
+          for superior accuracy.
+        </p>
+      </div>
+
+      <div class="mt-10">
+        <div
+          class="space-y-10 md:space-y-0 md:grid md:grid-cols-2 md:gap-x-8 md:gap-y-10"
+        >
+          <!-- Feature 1 -->
+          <div class="relative">
+            <div
+              class="absolute flex items-center justify-center h-12 w-12 rounded-md bg-blue-500 text-white"
+            >
+              <svg
+                class="h-6 w-6"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                />
+              </svg>
+            </div>
+            <div class="ml-16">
+              <h3 class="text-lg leading-6 font-medium text-gray-900">
+                Quantum-Enhanced Accuracy
+              </h3>
+              <p class="mt-2 text-base text-gray-500">
+                Leveraging quantum computing principles to improve detection
+                accuracy beyond classical methods.
+              </p>
+            </div>
+          </div>
+
+          <!-- Feature 2 -->
+          <div class="relative">
+            <div
+              class="absolute flex items-center justify-center h-12 w-12 rounded-md bg-blue-500 text-white"
+            >
+              <svg
+                class="h-6 w-6"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 10V3L4 14h7v7l9-11h-7z"
+                />
+              </svg>
+            </div>
+            <div class="ml-16">
+              <h3 class="text-lg leading-6 font-medium text-gray-900">
+                Instant Results
+              </h3>
+              <p class="mt-2 text-base text-gray-500">
+                Get analysis results in seconds with our optimized processing
+                pipeline.
+              </p>
+            </div>
+          </div>
+
+          <!-- Feature 3 -->
+          <div class="relative">
+            <div
+              class="absolute flex items-center justify-center h-12 w-12 rounded-md bg-blue-500 text-white"
+            >
+              <svg
+                class="h-6 w-6"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                />
+              </svg>
+            </div>
+            <div class="ml-16">
+              <h3 class="text-lg leading-6 font-medium text-gray-900">
+                Detailed Reports
+              </h3>
+              <p class="mt-2 text-base text-gray-500">
+                Receive comprehensive analysis with confidence scores and
+                visualizations.
+              </p>
+            </div>
+          </div>
+
+          <!-- Feature 4 -->
+          <div class="relative">
+            <div
+              class="absolute flex items-center justify-center h-12 w-12 rounded-md bg-blue-500 text-white"
+            >
+              <svg
+                class="h-6 w-6"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                />
+              </svg>
+            </div>
+            <div class="ml-16">
+              <h3 class="text-lg leading-6 font-medium text-gray-900">
+                Secure & Private
+              </h3>
+              <p class="mt-2 text-base text-gray-500">
+                Your data is processed securely with privacy-preserving
+                techniques.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA Section -->
+  <div class="bg-blue-700">
+    <div
+      class="max-w-2xl mx-auto text-center py-16 px-4 sm:py-20 sm:px-6 lg:px-8"
+    >
+      <h2 class="text-3xl font-extrabold text-white sm:text-4xl">
+        <span class="block">Ready to get started?</span>
+        <span class="block">Try our eye disease classifier today.</span>
+      </h2>
+      <p class="mt-4 text-lg leading-6 text-blue-200">
+        Join thousands of healthcare professionals who trust our technology for
+        accurate eye disease detection.
+      </p>
+      <a
+        href="{{ url_for('analyze_image') }}"
+        class="mt-8 w-full inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-blue-600 bg-white hover:bg-blue-50 transition-all duration-300 transform hover:scale-105"
+      >
+        Get started
+      </a>
+    </div>
+  </div>
+</div>
+
+<style>
+  .eyes-container {
+    width: 400px;
+    height: 200px;
+    position: relative;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    perspective: 1000px;
+    background: transparent;
+  }
+  .eye-container {
+    width: 200px;
+    height: 200px;
+    position: relative;
+    background: transparent;
+  }
+  #eye-canvas-left,
+  #eye-canvas-right {
+    width: 100%;
+    height: 100%;
+    display: block;
+    background: transparent;
+  }
+</style>
+{% endblock %} {% block scripts %}
+<!-- Load Three.js from a reliable CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    console.log("DOM Content Loaded");
+    try {
+      // Function to create an eye
+      function createEye(canvasId) {
+        console.log(`Creating eye for canvas: ${canvasId}`);
+        const canvas = document.getElementById(canvasId);
+        if (!canvas) {
+          console.error(`Canvas element ${canvasId} not found`);
+          return null;
+        }
+
+        // Set canvas size explicitly
+        canvas.width = 200;
+        canvas.height = 200;
+
+        const renderer = new THREE.WebGLRenderer({
+          canvas: canvas,
+          alpha: true,
+          antialias: true,
+        });
+        renderer.setSize(200, 200);
+        renderer.setClearColor(0x000000, 0);
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+        camera.position.z = 5;
+
+        // Create eye parts with adjusted sizes
+        const eyeGeometry = new THREE.SphereGeometry(1.5, 32, 32);
+        const eyeMaterial = new THREE.MeshPhongMaterial({
+          color: 0xffffff,
+          shininess: 100,
+          specular: 0x333333,
+        });
+        const eye = new THREE.Mesh(eyeGeometry, eyeMaterial);
+        scene.add(eye);
+
+        // Iris
+        const irisGeometry = new THREE.SphereGeometry(0.8, 32, 32);
+        const irisMaterial = new THREE.MeshPhongMaterial({
+          color: 0x2563eb,
+          shininess: 100,
+          specular: 0x333333,
+        });
+        const iris = new THREE.Mesh(irisGeometry, irisMaterial);
+        iris.position.z = 0.1;
+        scene.add(iris);
+
+        // Pupil
+        const pupilGeometry = new THREE.SphereGeometry(0.4, 32, 32);
+        const pupilMaterial = new THREE.MeshPhongMaterial({
+          color: 0x000000,
+          shininess: 100,
+          specular: 0x333333,
+        });
+        const pupil = new THREE.Mesh(pupilGeometry, pupilMaterial);
+        pupil.position.z = 0.2;
+        scene.add(pupil);
+
+        // Highlight
+        const highlightGeometry = new THREE.SphereGeometry(0.2, 32, 32);
+        const highlightMaterial = new THREE.MeshPhongMaterial({
+          color: 0xffffff,
+          shininess: 100,
+          specular: 0xffffff,
+        });
+        const highlight = new THREE.Mesh(highlightGeometry, highlightMaterial);
+        highlight.position.set(0.5, 0.5, 0.3);
+        scene.add(highlight);
+
+        // Add lights with increased intensity
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+        scene.add(ambientLight);
+
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 1.0);
+        directionalLight.position.set(1, 1, 1);
+        scene.add(directionalLight);
+
+        return {
+          scene,
+          camera,
+          renderer,
+          eye,
+          iris,
+          pupil,
+          blinkTime: 0,
+          isBlinking: false,
+          animate: function (time) {
+            // Subtle eye movement
+            this.eye.rotation.x = Math.sin(time) * 0.05;
+            this.eye.rotation.y = Math.cos(time) * 0.05;
+
+            // Blinking
+            this.blinkTime += 0.01;
+            if (this.blinkTime > 4) {
+              if (!this.isBlinking) {
+                this.isBlinking = true;
+                this.eye.scale.y = 0.1;
+                this.iris.scale.y = 0.1;
+                this.pupil.scale.y = 0.1;
+              } else if (this.blinkTime > 4.2) {
+                this.isBlinking = false;
+                this.eye.scale.y = 1;
+                this.iris.scale.y = 1;
+                this.pupil.scale.y = 1;
+                this.blinkTime = 0;
+              }
+            } else {
+              this.eye.scale.y = 1;
+              this.iris.scale.y = 1;
+              this.pupil.scale.y = 1;
+            }
+
+            this.renderer.render(this.scene, this.camera);
+          },
+          trackMouse: function (e) {
+            const rect = canvas.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+            const y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+
+            // Limit movement
+            const limitedX = Math.min(Math.max(x, -0.5), 0.5);
+            const limitedY = Math.min(Math.max(y, -0.5), 0.5);
+
+            this.iris.position.x = limitedX * 0.3;
+            this.iris.position.y = limitedY * 0.3;
+            this.pupil.position.x = limitedX * 0.5;
+            this.pupil.position.y = limitedY * 0.5;
+          },
+        };
+      }
+
+      console.log("Creating eyes...");
+      // Create both eyes
+      const leftEye = createEye("eye-canvas-left");
+      const rightEye = createEye("eye-canvas-right");
+
+      if (!leftEye || !rightEye) {
+        console.error("Failed to create one or both eyes");
+        return;
+      }
+
+      console.log("Starting animation...");
+      // Animation loop
+      let time = 0;
+      function animate() {
+        requestAnimationFrame(animate);
+        time += 0.01;
+
+        leftEye.animate(time);
+        rightEye.animate(time);
+      }
+
+      // Mouse movement tracking
+      document.addEventListener("mousemove", (e) => {
+        leftEye.trackMouse(e);
+        rightEye.trackMouse(e);
+      });
+
+      animate();
+      console.log("Animation started successfully");
+    } catch (error) {
+      console.error("Error initializing 3D eyes:", error);
+    }
+  });
+</script>
+{% endblock %}
