@@ -14,7 +14,7 @@ A modern web application that leverages quantum-classical hybrid machine learnin
 ## 📋 Prerequisites
 
 - Python 3.8+
-- Node.js and npm (for frontend assets)
+- Node.js and npm (only for TailwindCSS compilation)
 - Git
 
 ## 🚀 Installation
@@ -39,15 +39,15 @@ A modern web application that leverages quantum-classical hybrid machine learnin
    pip install -r requirements.txt
    ```
 
-4. **Install frontend dependencies**:
+4. **Initialize the database**:
 
-   ```bash
-   npm install
-   ```
-
-5. **Initialize the database**:
    ```bash
    python direct_db_fix.py
+   ```
+
+5. **(Optional) Only if modifying TailwindCSS styles**:
+   ```bash
+   npm install
    ```
 
 ## 🏃‍♂️ Running the Application
@@ -71,11 +71,12 @@ A modern web application that leverages quantum-classical hybrid machine learnin
 
 ## 📊 Technology Stack
 
-- **Backend**: Python, Flask, SQLAlchemy
-- **Frontend**: HTML, CSS, JavaScript, TailwindCSS
+- **Primary Backend**: Python with Flask web framework
+- **Database**: SQLite with SQLAlchemy ORM
 - **Machine Learning**: PyTorch, OpenCV
 - **Quantum Computing**: Qiskit, Quantum Circuit Simulation
-- **Database**: SQLite
+- **Frontend**: HTML with Jinja2 templates, JavaScript
+- **CSS Framework**: TailwindCSS (pre-compiled, doesn't require Node.js at runtime)
 
 ## 📁 Project Structure
 
