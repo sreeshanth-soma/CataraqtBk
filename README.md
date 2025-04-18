@@ -1,91 +1,116 @@
-# Quantum Eye Disease Classifier
+# CataraQt: Quantum-Powered Cataract Detection
 
-A web application that uses quantum-classical hybrid machine learning to detect cataracts in eye images.
+A modern web application that leverages quantum-classical hybrid machine learning to detect cataracts in eye images with high accuracy. The project combines the power of quantum computing with traditional computer vision techniques to provide advanced eye disease detection.
 
-## Features
+## 🌟 Features
 
-- Modern, responsive web interface
-- Drag-and-drop image upload
-- Real-time image preview
-- Quantum-classical hybrid model for cataract detection
-- Confidence score for predictions
+- **Quantum-Classical Hybrid Model**: Utilizes quantum computing principles for enhanced cataract detection
+- **Modern Web Interface**: Responsive design with dark/light mode support
+- **Visualization Tools**: Provides heatmaps and edge detection to help understand detection results
+- **User Authentication**: Secure login/registration system with profile management
+- **Analysis History**: Track all previous analyses with timestamps and results
+- **Personalized Recommendations**: Provides custom health recommendations based on analysis results
 
-## Prerequisites
+## 📋 Prerequisites
 
-- Python 3.8 or higher
-- pip (Python package installer)
+- Python 3.8+
+- Node.js and npm (for frontend assets)
+- Git
 
-## Installation
+## 🚀 Installation
 
-1. Clone the repository:
+1. **Clone the repository**:
 
-```bash
-git clone <repository-url>
-cd <repository-name>
+   ```bash
+   git clone https://github.com/sreeshanth-soma/CataraQt.git
+   cd CataraQt
+   ```
+
+2. **Set up a virtual environment**:
+
+   ```bash
+   python -m venv venv_new
+   source venv_new/bin/activate  # On Windows: venv_new\Scripts\activate
+   ```
+
+3. **Install Python dependencies**:
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Install frontend dependencies**:
+
+   ```bash
+   npm install
+   ```
+
+5. **Initialize the database**:
+   ```bash
+   python direct_db_fix.py
+   ```
+
+## 🏃‍♂️ Running the Application
+
+1. **Start the Flask application**:
+
+   ```bash
+   python app.py
+   ```
+
+2. **Access the application**:
+   Open your browser and navigate to http://localhost:5000
+
+## 🧪 Using the Application
+
+1. **Create an account** or log in if you already have one
+2. **Upload an eye image** on the Analysis page
+3. **View results** including prediction, confidence score, and visualizations
+4. **Check your history** to review past analyses
+5. **View your profile** to see statistics about your eye health
+
+## 📊 Technology Stack
+
+- **Backend**: Python, Flask, SQLAlchemy
+- **Frontend**: HTML, CSS, JavaScript, TailwindCSS
+- **Machine Learning**: PyTorch, OpenCV
+- **Quantum Computing**: Qiskit, Quantum Circuit Simulation
+- **Database**: SQLite
+
+## 📁 Project Structure
+
+```
+CataraQt/
+├── app.py                         # Main Flask application
+├── quantum_eye_disease_classifier.py  # Quantum-classical model implementation
+├── best_model.pth                 # Trained model weights
+├── static/                        # Static assets
+│   ├── css/                       # Compiled CSS
+│   ├── js/                        # JavaScript files
+│   └── uploads/                   # User uploaded images
+├── templates/                     # HTML templates
+├── Datasets/                      # Training and test datasets
+└── venv_new/                      # Virtual environment
 ```
 
-2. Create a virtual environment (recommended):
+## 🛠️ Advanced Configuration
 
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows, use: venv\Scripts\activate
-```
+- Adjust detection sensitivity in `app.py` by modifying the `cataract_threshold` variable
+- Customize visualization settings in the analyze route handler
+- Modify quantum circuit parameters in `quantum_eye_disease_classifier.py` for fine-tuning
 
-3. Install the required packages:
+## 🤝 Contributing
 
-```bash
-pip install -r requirements.txt
-```
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-## Usage
-
-1. Start the Flask application:
-
-```bash
-python app.py
-```
-
-2. Open your web browser and navigate to:
-
-```
-http://localhost:5000
-```
-
-3. Upload an eye image by either:
-
-   - Dragging and dropping an image onto the upload area
-   - Clicking the "Browse Files" button to select an image
-
-4. The application will process the image and display:
-   - The prediction (Cataract or Normal)
-   - The confidence score of the prediction
-
-## Project Structure
-
-```
-.
-├── app.py                 # Flask application
-├── templates/
-│   └── index.html        # Web interface template
-├── static/
-│   └── uploads/          # Temporary storage for uploaded images
-├── requirements.txt      # Python dependencies
-└── README.md            # This file
-```
-
-## Technical Details
-
-The application uses:
-
-- Flask for the web server
-- Qiskit for quantum computing components
-- PyTorch for classical neural network components
-- TailwindCSS for styling
-
-## License
+## 📝 License
 
 [Your chosen license]
 
-## Contributing
+## 📧 Contact
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+For questions or feedback about CataraQt, please [open an issue](https://github.com/sreeshanth-soma/CataraQt/issues) on the GitHub repository.
+
+---
+
+_Note: This project was developed for the Womanium Quantum Hackathon/Competition and demonstrates the potential applications of quantum computing in healthcare._
