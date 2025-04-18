@@ -373,16 +373,17 @@ def profile():
 
     # Calculate stats
     total_analyses = Analysis.query.filter_by(user_id=user.id).count()
-    cataract_detected = Analysis.query.filter_by(user_id=user.id, prediction='Cataract').count()
-    healthy_detected = Analysis.query.filter_by(user_id=user.id, prediction='Normal').count()
+    cataract_detected = Analysis.query.filter_by(user_id=user.id, prediction='Cataract Detected').count()
+    healthy_detected = Analysis.query.filter_by(user_id=user.id, prediction='No Cataract Detected').count()
     
     # Handle missing profile picture more gracefully
     profile_pic_url = url_for('serve_upload', filename=user.profile_picture if user.profile_picture else 'default_profile.png')
     
     stats = {
-        'total': total_analyses,
-        'cataract': cataract_detected,
-        'healthy': healthy_detected
+        'total_analyses': total_analyses,
+        'cataract_detected': cataract_detected,
+        'no_cataract': healthy_detected,
+        'cataract_percentage': (cataract_detected / total_analyses * 100) if total_analyses > 0 else 0
     }
     return render_template('profile.html', user=user, stats=stats, profile_pic_url=profile_pic_url, active_page='profile')
 

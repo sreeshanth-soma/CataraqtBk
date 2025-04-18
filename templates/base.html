@@ -348,7 +348,7 @@
       html:not(.dark) h4,
       html:not(.dark) h5,
       html:not(.dark) h6 {
-        color: var(--text-primary);
+        color: #000000;
       }
 
       /* Exceptions for headings that should remain white regardless of theme */
@@ -383,6 +383,23 @@
       .dark .bg-white,
       .dark .bg-gray-100 {
         background-color: var(--bg-primary) !important;
+      }
+
+      /* Fix for bg-white getting incorrect background in light mode */
+      html:not(.dark) .bg-white {
+        background-color: #ffffff !important;
+      }
+
+      html:not(.dark) .bg-gray-50 {
+        background-color: #f9fafb !important;
+      }
+
+      html:not(.dark) .bg-gray-100 {
+        background-color: #f3f4f6 !important;
+      }
+
+      html:not(.dark) .bg-gray-800 {
+        background-color: #1f2937 !important; /* Only apply in dark mode */
       }
 
       .dark .text-gray-800,
@@ -425,6 +442,75 @@
       html:not(.dark) .bg-indigo-600 h1:not([class*="text-white"]),
       html:not(.dark) .bg-indigo-700 h1:not([class*="text-white"]) {
         color: white !important;
+      }
+
+      /* Fix for light gray text in light mode */
+      html:not(.dark) .text-gray-400 {
+        color: #4b5563 !important; /* Darker than default */
+      }
+
+      html:not(.dark) .text-gray-500 {
+        color: #374151 !important; /* Darker than default */
+      }
+
+      html:not(.dark) .text-gray-300,
+      html:not(.dark) .text-gray-200 {
+        color: #1f2937 !important; /* Much darker for better visibility */
+      }
+
+      /* Make profile section text darker in light mode */
+      html:not(.dark) .profile-section .text-gray-500,
+      html:not(.dark) .profile-section .text-gray-400,
+      html:not(.dark) .profile-section p,
+      html:not(.dark) .profile-card .text-gray-500,
+      html:not(.dark) .profile-card .text-gray-400,
+      html:not(.dark) .profile-card p {
+        color: #1f2937 !important;
+      }
+
+      /* Ensure sufficient contrast for all text in light mode */
+      html:not(.dark) p,
+      html:not(.dark) span:not(.badge):not(.icon):not([class*="bg-"]) {
+        color: #1f2937;
+      }
+
+      /* Ensure form labels and other UI text are visible */
+      html:not(.dark) label,
+      html:not(.dark) .text-sm {
+        color: #1f2937;
+      }
+
+      /* Light theme enhancements for better text contrast */
+      .text-gray-700 {
+        color: #374151 !important;
+      }
+
+      /* Fix for dark background in light theme */
+      html:not(.dark) .bg-gray-700,
+      html:not(.dark) .bg-gray-800,
+      html:not(.dark) .bg-gray-900 {
+        background-color: #f3f4f6 !important; /* Light gray in light mode */
+      }
+
+      /* Fix specifically for containers in analyze, history and profile pages */
+      html:not(.dark) .max-w-2xl.mx-auto.bg-white,
+      html:not(.dark) .max-w-2xl.mx-auto.bg-gray-800,
+      html:not(.dark) .max-w-7xl.mx-auto.bg-white,
+      html:not(.dark) .max-w-7xl.mx-auto.bg-gray-800,
+      html:not(.dark) .profile-card.bg-white,
+      html:not(.dark) .profile-card.bg-gray-800 {
+        background-color: #ffffff !important;
+        color: #1f2937 !important;
+      }
+
+      /* Fix for file upload area in light mode */
+      html:not(.dark) .bg-gray-50,
+      html:not(.dark) .dark\:bg-gray-700 {
+        background-color: #f9fafb !important;
+      }
+
+      html:not(.dark) .dark\:hover\:bg-gray-600:hover {
+        background-color: #f3f4f6 !important;
       }
     </style>
   </head>
