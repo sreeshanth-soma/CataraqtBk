@@ -1,81 +1,215 @@
 {% extends "base.html" %} {% block title %}Edit Profile - CataraQt{% endblock %}
 {% block content %}
 <div
-  class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 py-12 px-4 sm:px-6 lg:px-8"
+  class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-900 dark:to-gray-800 py-12 px-4 sm:px-6 lg:px-8"
 >
-  <div class="max-w-7xl mx-auto">
+  <div class="max-w-3xl mx-auto">
     <!-- Header Section -->
-    <div class="text-center mb-12 animate-fade-up">
-      <h1 class="text-4xl font-bold text-gray-900 mb-4">Edit Profile</h1>
-      <p class="text-xl text-gray-600">Update your account information</p>
+    <div class="text-center mb-8 animate-fade-up">
+      <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+        Edit Profile
+      </h1>
+      <p class="text-lg text-gray-600 dark:text-gray-300">
+        Update your account information
+      </p>
     </div>
 
     <!-- Edit Form -->
-    <div class="bg-white rounded-2xl shadow-xl p-8 animate-fade-up">
-      <form method="POST" class="space-y-6">
-        <!-- Name Field -->
-        <div>
-          <label for="name" class="block text-sm font-medium text-gray-700"
-            >Name</label
-          >
-          <div class="mt-1">
-            <input
-              type="text"
-              name="name"
-              id="name"
-              value="{{ user.name }}"
-              required
-              class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+    <div
+      class="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-6 md:p-8 animate-fade-up"
+    >
+      <form method="POST" enctype="multipart/form-data" class="space-y-6">
+        <!-- Profile Picture -->
+        <div class="flex flex-col items-center">
+          <div class="mb-4">
+            {% if user.profile_picture %}
+            <img
+              src="{{ url_for('serve_upload', filename=user.profile_picture) }}"
+              alt="{{ user.name }}'s profile picture"
+              class="h-24 w-24 rounded-full object-cover border-2 border-gray-200 dark:border-gray-600 shadow-md"
             />
+            {% else %}
+            <span
+              class="inline-block h-24 w-24 rounded-full overflow-hidden bg-gray-100 dark:bg-gray-700 flex items-center justify-center"
+            >
+              <svg
+                class="h-16 w-16 text-gray-400 dark:text-gray-500"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z"
+                />
+              </svg>
+            </span>
+            {% endif %}
+          </div>
+
+          <label class="block text-center mb-2">
+            <span class="text-sm font-medium text-gray-700 dark:text-gray-300"
+              >Change profile picture</span
+            >
+            <input
+              type="file"
+              name="profile_picture"
+              class="mt-1 block w-full text-sm text-gray-700 dark:text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 dark:file:bg-blue-900/30 dark:file:text-blue-300 hover:file:bg-blue-100 dark:hover:file:bg-blue-800/40"
+              accept="image/*"
+            />
+          </label>
+        </div>
+
+        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+          <!-- Name Field -->
+          <div>
+            <label
+              for="name"
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >Name</label
+            >
+            <div class="mt-1">
+              <input
+                type="text"
+                name="name"
+                id="name"
+                value="{{ user.name }}"
+                required
+                class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
+              />
+            </div>
+          </div>
+
+          <!-- Email Field -->
+          <div>
+            <label
+              for="email"
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >Email</label
+            >
+            <div class="mt-1">
+              <input
+                type="email"
+                name="email"
+                id="email"
+                value="{{ user.email or '' }}"
+                class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
+              />
+            </div>
+          </div>
+
+          <!-- Location Field -->
+          <div>
+            <label
+              for="location"
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >Location</label
+            >
+            <div class="mt-1">
+              <input
+                type="text"
+                name="location"
+                id="location"
+                value="{{ user.location or '' }}"
+                class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
+              />
+            </div>
+          </div>
+
+          <!-- Username Field (display only) -->
+          <div>
+            <label
+              for="username"
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >Username</label
+            >
+            <div class="mt-1">
+              <input
+                type="text"
+                id="username"
+                value="{{ user.username }}"
+                disabled
+                class="shadow-sm block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-400 rounded-md bg-gray-50 dark:bg-gray-800"
+              />
+              <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                Username cannot be changed
+              </p>
+            </div>
           </div>
         </div>
 
-        <!-- Current Password Field -->
+        <!-- Bio Field -->
         <div>
           <label
-            for="current_password"
-            class="block text-sm font-medium text-gray-700"
-            >Current Password</label
+            for="bio"
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+            >About me</label
           >
           <div class="mt-1">
-            <input
-              type="password"
-              name="current_password"
-              id="current_password"
-              required
-              class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
-            />
+            <textarea
+              name="bio"
+              id="bio"
+              rows="3"
+              class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
+            >
+{{ user.bio or '' }}</textarea
+            >
           </div>
+          <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+            Brief description for your profile
+          </p>
         </div>
 
-        <!-- New Password Field -->
-        <div>
-          <label
-            for="new_password"
-            class="block text-sm font-medium text-gray-700"
-            >New Password (leave blank to keep current)</label
-          >
-          <div class="mt-1">
-            <input
-              type="password"
-              name="new_password"
-              id="new_password"
-              class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
-            />
+        <div class="border-t border-gray-200 dark:border-gray-700 pt-6">
+          <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-3">
+            Change Password
+          </h3>
+
+          <!-- Current Password Field -->
+          <div class="mb-4">
+            <label
+              for="current_password"
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >Current Password</label
+            >
+            <div class="mt-1">
+              <input
+                type="password"
+                name="current_password"
+                id="current_password"
+                required
+                class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
+              />
+            </div>
+          </div>
+
+          <!-- New Password Field -->
+          <div>
+            <label
+              for="new_password"
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >New Password (leave blank to keep current)</label
+            >
+            <div class="mt-1">
+              <input
+                type="password"
+                name="new_password"
+                id="new_password"
+                class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
+              />
+            </div>
           </div>
         </div>
 
         <!-- Action Buttons -->
-        <div class="flex justify-end space-x-4">
+        <div class="flex justify-end space-x-4 pt-4">
           <a
             href="{{ url_for('profile') }}"
-            class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-800"
           >
             Cancel
           </a>
           <button
             type="submit"
-            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-800"
           >
             Save Changes
           </button>

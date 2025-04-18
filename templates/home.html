@@ -1,196 +1,382 @@
 {% extends "base.html" %} {% block title %}Home - CataraQt{% endblock %} {%
-block content %}
-<div class="bg-white">
-  <!-- Hero section -->
-  <div class="relative">
-    <div class="absolute inset-x-0 bottom-0 h-1/2 bg-gray-100"></div>
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-      <div class="relative shadow-xl sm:rounded-2xl sm:overflow-hidden">
-        <div class="absolute inset-0">
-          <img
-            class="h-full w-full object-cover"
-            src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80"
-            alt="Eye care"
-          />
-          <div class="absolute inset-0 bg-blue-700 mix-blend-multiply"></div>
-        </div>
-        <div class="relative px-4 py-16 sm:px-6 sm:py-24 lg:py-32 lg:px-8">
+block head_extra %}
+<!-- Preload critical resources for animations -->
+<link
+  rel="preload"
+  href="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"
+  as="script"
+/>
+<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+{% endblock %} {% block content %}
+<div class="bg-white dark:bg-gray-900">
+  <!-- Hero section with particle animation background -->
+  <div
+    class="relative overflow-hidden min-h-screen flex items-center"
+    id="hero-section"
+  >
+    <div id="particles-js" class="absolute inset-0 z-0"></div>
+    <div
+      class="absolute inset-0 bg-gradient-to-br from-blue-900/80 to-purple-900/80 dark:from-blue-900/80 dark:to-purple-900/80 light:from-white/85 light:to-gray-100/85 z-10"
+    ></div>
+
+    <div
+      class="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-24 w-full"
+    >
+      <div class="lg:flex lg:items-center lg:justify-between gap-12">
+        <div
+          class="lg:w-1/2 animate-fade-in text-center lg:text-left mb-12 lg:mb-0"
+        >
           <h1
-            class="text-center text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl"
+            class="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-white dark:text-white light:text-gray-800 hero-heading"
+            style="display: block !important; visibility: visible !important"
           >
-            <span class="block text-white">Quantum-Powered</span>
-            <span class="block text-blue-200">Cataract Detection</span>
+            <span
+              class="block mb-2 dark:text-white light:text-gray-800 hero-heading"
+              style="display: block !important; visibility: visible !important"
+              >Quantum-Powered</span
+            >
+            <span
+              class="block text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-300 dark:to-cyan-200 hero-heading"
+              style="display: block !important; visibility: visible !important"
+            >
+              Cataract Detection
+            </span>
           </h1>
           <p
-            class="mt-6 max-w-lg mx-auto text-center text-xl text-blue-200 sm:max-w-3xl"
+            class="mt-6 text-xl leading-relaxed text-blue-100 dark:text-blue-100 light:text-gray-700 max-w-xl mx-auto lg:mx-0 hero-description"
+            style="display: block !important; visibility: visible !important"
           >
             Advanced eye disease detection using quantum-classical hybrid
-            machine learning. Get accurate results in seconds.
+            machine learning. Get accurate results in seconds with our
+            cutting-edge technology.
           </p>
+
           <div
-            class="mt-10 max-w-sm mx-auto sm:max-w-none sm:flex sm:justify-center"
+            class="mt-10 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
           >
             {% if not session.get('user_id') %}
-            <div
-              class="space-y-4 sm:space-y-0 sm:mx-auto sm:inline-grid sm:grid-cols-2 sm:gap-5"
+            <a
+              href="{{ url_for('login') }}"
+              class="relative group px-6 py-3 text-lg font-medium text-white dark:text-white light:text-gray-800 bg-transparent overflow-hidden rounded-lg transition-all duration-300 w-full sm:w-auto"
             >
-              <a
-                href="{{ url_for('login') }}"
-                class="flex items-center justify-center px-4 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-blue-700 bg-white hover:bg-blue-50 sm:px-8"
-              >
-                Sign in
-              </a>
-              <a
-                href="{{ url_for('register') }}"
-                class="flex items-center justify-center px-4 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-500 hover:bg-blue-600 sm:px-8"
-              >
-                Register
-              </a>
-            </div>
+              <span
+                class="absolute inset-0 w-0 bg-gradient-to-r from-blue-500 to-blue-600 transition-all duration-500 ease-out group-hover:w-full"
+              ></span>
+              <span class="relative flex items-center justify-center space-x-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
+                  />
+                </svg>
+                <span>Sign In</span>
+              </span>
+            </a>
+
+            <a
+              href="{{ url_for('register') }}"
+              class="px-6 py-3 text-lg font-medium text-white dark:text-white light:text-gray-800 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 w-full sm:w-auto flex items-center justify-center"
+            >
+              <span class="flex items-center justify-center space-x-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
+                  />
+                </svg>
+                <span>Register Now</span>
+              </span>
+            </a>
             {% else %}
-            <div class="sm:mx-auto">
-              <a
-                href="{{ url_for('analyze_image') }}"
-                class="flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-500 hover:bg-blue-600"
+            <a
+              href="{{ url_for('analyze_image') }}"
+              class="px-6 py-3 text-lg font-medium text-white dark:text-white light:text-gray-800 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center space-x-2 w-full sm:w-auto mx-auto lg:mx-0"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
               >
-                Start Analysis
-              </a>
-            </div>
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <span>Start Analysis</span>
+            </a>
             {% endif %}
           </div>
         </div>
+
+        <div class="hidden lg:block lg:w-1/2">
+          <div class="relative mt-12 lg:mt-0">
+            <div class="relative animate-float mx-auto">
+              <img
+                src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80"
+                alt="Eye care"
+                class="rounded-2xl shadow-2xl object-cover w-full h-auto max-w-md mx-auto"
+              />
+              <div
+                class="absolute inset-0 rounded-2xl ring-1 ring-white/20"
+              ></div>
+            </div>
+            <div
+              class="absolute -bottom-6 -left-6 w-44 h-44 rounded-full bg-gradient-to-r from-blue-400 to-cyan-300 blur-3xl opacity-40 animate-pulse"
+            ></div>
+            <div
+              class="absolute top-10 -right-6 w-72 h-72 rounded-full bg-gradient-to-l from-purple-400 to-blue-500 blur-3xl opacity-20 animate-pulse-slow"
+            ></div>
+          </div>
+        </div>
       </div>
+    </div>
+
+    <!-- Scroll indicator with direct javascript -->
+    <div
+      class="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-20 animate-bounce"
+    >
+      <a
+        href="javascript:void(0)"
+        onclick="document.getElementById('features').scrollIntoView({behavior: 'smooth'})"
+        class="text-white dark:text-white light:text-gray-800 flex flex-col items-center"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M19 14l-7 7m0 0l-7-7m7 7V3"
+          />
+        </svg>
+      </a>
     </div>
   </div>
 
   <!-- Feature section -->
-  <div class="relative bg-gray-100 py-16 sm:py-24 lg:py-32">
+  <div
+    id="features"
+    class="relative bg-gray-100 dark:bg-gray-800 py-16 sm:py-24 lg:py-32"
+  >
     <div
-      class="mx-auto max-w-md px-4 text-center sm:max-w-3xl sm:px-6 lg:max-w-7xl lg:px-8"
+      class="mx-auto max-w-md px-4 sm:max-w-3xl sm:px-6 lg:max-w-7xl lg:px-8"
     >
-      <h2
-        class="text-base font-semibold tracking-wider text-blue-600 uppercase"
-      >
-        Features
-      </h2>
-      <p
-        class="mt-2 text-3xl font-extrabold text-gray-900 tracking-tight sm:text-4xl"
-      >
-        Everything you need for accurate eye disease detection
-      </p>
-      <p class="mt-5 max-w-prose mx-auto text-xl text-gray-500">
-        Our quantum-enhanced AI model provides state-of-the-art accuracy in
-        detecting cataracts and other eye conditions.
-      </p>
-      <div class="mt-12">
-        <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          <!-- Feature 1 -->
-          <div class="pt-6">
-            <div class="flow-root bg-white rounded-lg px-6 pb-8">
-              <div class="-mt-6">
-                <div>
-                  <span
-                    class="inline-flex items-center justify-center p-3 bg-blue-500 rounded-md shadow-lg"
-                  >
-                    <svg
-                      class="h-6 w-6 text-white"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-                      />
-                    </svg>
-                  </span>
-                </div>
-                <h3
-                  class="mt-8 text-lg font-medium text-gray-900 tracking-tight"
+      <!-- Section header -->
+      <div class="text-center mb-16 animate-on-scroll">
+        <div
+          class="inline-flex items-center justify-center px-4 py-1.5 mb-4 bg-blue-100 dark:bg-blue-900/30 rounded-full"
+        >
+          <span
+            class="text-sm font-semibold tracking-wider text-blue-600 dark:text-blue-400 uppercase"
+          >
+            Advanced Features
+          </span>
+        </div>
+        <h2
+          class="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight"
+        >
+          Everything you need for accurate eye disease detection
+        </h2>
+        <p
+          class="mt-5 max-w-prose mx-auto text-xl text-gray-500 dark:text-gray-400"
+        >
+          Our quantum-enhanced AI model provides state-of-the-art accuracy in
+          detecting cataracts and other eye conditions.
+        </p>
+
+        <!-- Added link to technology details -->
+        <div class="mt-4">
+          <a
+            href="{{ url_for('technology_details') }}"
+            class="inline-flex items-center justify-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white dark:text-white light:text-gray-800 bg-blue-600 hover:bg-blue-700"
+          >
+            View All Technology Details
+          </a>
+        </div>
+      </div>
+
+      <!-- Feature cards with hover effects -->
+      <div class="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3">
+        <!-- Feature 1 -->
+        <div class="feature-card group relative animate-on-scroll h-full">
+          <div
+            class="bg-white dark:bg-gray-700 rounded-xl shadow-xl overflow-hidden transition-all duration-300 transform hover:scale-105 hover:shadow-2xl h-full flex flex-col"
+          >
+            <div
+              class="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            ></div>
+            <div class="h-48 flex justify-center items-center p-6">
+              <div
+                class="relative z-10 p-5 bg-blue-500 rounded-full text-white dark:text-white light:text-white shadow-blue-500/50 shadow-lg transition-transform duration-300 transform group-hover:scale-110 group-hover:rotate-3"
+              >
+                <svg
+                  class="h-10 w-10"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
                 >
-                  High Accuracy
-                </h3>
-                <p class="mt-5 text-base text-gray-500">
-                  Our quantum-classical hybrid model achieves state-of-the-art
-                  accuracy in cataract detection.
-                </p>
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                  />
+                </svg>
+              </div>
+            </div>
+            <div class="p-6 flex flex-col flex-grow">
+              <h3 class="text-xl font-bold text-gray-900 dark:text-white">
+                High Accuracy Detection
+              </h3>
+              <p
+                class="mt-4 text-base text-gray-600 dark:text-gray-300 flex-grow"
+              >
+                Our quantum-classical hybrid model achieves state-of-the-art
+                accuracy in cataract detection with advanced neural networks.
+              </p>
+              <div class="mt-6 flex justify-end">
+                <a
+                  href="{{ url_for('technology_details') }}"
+                  class="text-blue-500 dark:text-blue-400 font-medium group-hover:underline"
+                  onclick="window.location.href='{{ url_for('technology_details') }}'; return false;"
+                  target="_self"
+                  >Learn more →</a
+                >
               </div>
             </div>
           </div>
+        </div>
 
-          <!-- Feature 2 -->
-          <div class="pt-6">
-            <div class="flow-root bg-white rounded-lg px-6 pb-8">
-              <div class="-mt-6">
-                <div>
-                  <span
-                    class="inline-flex items-center justify-center p-3 bg-blue-500 rounded-md shadow-lg"
-                  >
-                    <svg
-                      class="h-6 w-6 text-white"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M13 10V3L4 14h7v7l9-11h-7z"
-                      />
-                    </svg>
-                  </span>
-                </div>
-                <h3
-                  class="mt-8 text-lg font-medium text-gray-900 tracking-tight"
+        <!-- Feature 2 -->
+        <div
+          class="feature-card group relative animate-on-scroll h-full"
+          data-delay="200"
+        >
+          <div
+            class="bg-white dark:bg-gray-700 rounded-xl shadow-xl overflow-hidden transition-all duration-300 transform hover:scale-105 hover:shadow-2xl h-full flex flex-col"
+          >
+            <div
+              class="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            ></div>
+            <div class="h-48 flex justify-center items-center p-6">
+              <div
+                class="relative z-10 p-5 bg-purple-500 rounded-full text-white dark:text-white light:text-white shadow-purple-500/50 shadow-lg transition-transform duration-300 transform group-hover:scale-110 group-hover:rotate-3"
+              >
+                <svg
+                  class="h-10 w-10"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
                 >
-                  Fast Results
-                </h3>
-                <p class="mt-5 text-base text-gray-500">
-                  Get instant results with our optimized quantum computing
-                  pipeline.
-                </p>
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M13 10V3L4 14h7v7l9-11h-7z"
+                  />
+                </svg>
+              </div>
+            </div>
+            <div class="p-6 flex flex-col flex-grow">
+              <h3 class="text-xl font-bold text-gray-900 dark:text-white">
+                Fast & Reliable Results
+              </h3>
+              <p
+                class="mt-4 text-base text-gray-600 dark:text-gray-300 flex-grow"
+              >
+                Get instant results with our optimized quantum computing
+                pipeline. Analysis takes only seconds with detailed visual
+                explanations.
+              </p>
+              <div class="mt-6 flex justify-end">
+                <a
+                  href="{{ url_for('technology_details') }}"
+                  class="text-purple-500 dark:text-purple-400 font-medium group-hover:underline"
+                  onclick="window.location.href='{{ url_for('technology_details') }}'; return false;"
+                  target="_self"
+                  >Learn more →</a
+                >
               </div>
             </div>
           </div>
+        </div>
 
-          <!-- Feature 3 -->
-          <div class="pt-6">
-            <div class="flow-root bg-white rounded-lg px-6 pb-8">
-              <div class="-mt-6">
-                <div>
-                  <span
-                    class="inline-flex items-center justify-center p-3 bg-blue-500 rounded-md shadow-lg"
-                  >
-                    <svg
-                      class="h-6 w-6 text-white"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                      />
-                    </svg>
-                  </span>
-                </div>
-                <h3
-                  class="mt-8 text-lg font-medium text-gray-900 tracking-tight"
+        <!-- Feature 3 -->
+        <div
+          class="feature-card group relative animate-on-scroll h-full"
+          data-delay="400"
+        >
+          <div
+            class="bg-white dark:bg-gray-700 rounded-xl shadow-xl overflow-hidden transition-all duration-300 transform hover:scale-105 hover:shadow-2xl h-full flex flex-col"
+          >
+            <div
+              class="absolute inset-0 bg-gradient-to-br from-green-500/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            ></div>
+            <div class="h-48 flex justify-center items-center p-6">
+              <div
+                class="relative z-10 p-5 bg-green-500 rounded-full text-white dark:text-white light:text-white shadow-green-500/50 shadow-lg transition-transform duration-300 transform group-hover:scale-110 group-hover:rotate-3"
+              >
+                <svg
+                  class="h-10 w-10"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
                 >
-                  Secure & Private
-                </h3>
-                <p class="mt-5 text-base text-gray-500">
-                  Your data is processed securely and never stored on our
-                  servers.
-                </p>
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                  />
+                </svg>
+              </div>
+            </div>
+            <div class="p-6 flex flex-col flex-grow">
+              <h3 class="text-xl font-bold text-gray-900 dark:text-white">
+                Secure & Private Analysis
+              </h3>
+              <p
+                class="mt-4 text-base text-gray-600 dark:text-gray-300 flex-grow"
+              >
+                Your data is processed securely and never stored on our servers.
+                We prioritize privacy and security in all our operations.
+              </p>
+              <div class="mt-6 flex justify-end">
+                <a
+                  href="{{ url_for('technology_details') }}"
+                  class="text-green-500 dark:text-green-400 font-medium group-hover:underline"
+                  onclick="window.location.href='{{ url_for('technology_details') }}'; return false;"
+                  target="_self"
+                  >Learn more →</a
+                >
               </div>
             </div>
           </div>
@@ -198,5 +384,939 @@ block content %}
       </div>
     </div>
   </div>
+
+  <!-- How it works section -->
+  <div
+    class="relative bg-white dark:bg-gray-900 py-16 sm:py-24 lg:py-32 overflow-hidden border-t border-b border-gray-200 dark:border-gray-700"
+  >
+    <div
+      class="mx-auto max-w-md px-4 sm:max-w-3xl sm:px-6 lg:max-w-7xl lg:px-8"
+    >
+      <!-- Section header -->
+      <div class="text-center mb-16 animate-on-scroll">
+        <div
+          class="inline-flex items-center justify-center px-4 py-1.5 mb-4 bg-purple-100 dark:bg-purple-900/30 rounded-full"
+        >
+          <span
+            class="text-sm font-semibold tracking-wider text-purple-600 dark:text-purple-400 uppercase"
+          >
+            Our Process
+          </span>
+        </div>
+        <h2
+          class="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight"
+        >
+          How Our Technology Works
+        </h2>
+        <p
+          class="mt-5 max-w-prose mx-auto text-xl text-gray-500 dark:text-gray-400"
+        >
+          Our quantum-enhanced AI processes your eye images through a
+          sophisticated pipeline
+        </p>
+      </div>
+
+      <!-- Process steps with connected timeline -->
+      <div class="relative">
+        <!-- Timeline connector -->
+        <div
+          class="hidden md:block absolute left-1/2 transform -translate-x-1/2 top-0 h-full w-1 bg-gradient-to-b from-blue-500 to-purple-500 z-0"
+        ></div>
+
+        <!-- Step 1 -->
+        <div class="relative z-10 mb-16 md:mb-24 animate-on-scroll">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <div class="order-2 md:order-1">
+              <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                Upload Your Eye Image
+              </h3>
+              <p class="text-gray-600 dark:text-gray-300">
+                Simply upload a high-quality image of your eye. Our system
+                accepts various image formats and automatically processes them
+                for analysis.
+              </p>
+              <ul class="mt-4 space-y-2">
+                <li class="flex items-center text-gray-600 dark:text-gray-300">
+                  <svg
+                    class="h-5 w-5 text-green-500 mr-2 flex-shrink-0"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                  <span>Supports JPG, PNG and GIF formats</span>
+                </li>
+                <li class="flex items-center text-gray-600 dark:text-gray-300">
+                  <svg
+                    class="h-5 w-5 text-green-500 mr-2 flex-shrink-0"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                  <span>Automatic image optimization</span>
+                </li>
+              </ul>
+            </div>
+            <div class="order-1 md:order-2 flex justify-center">
+              <div
+                class="relative w-24 h-24 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center shadow-lg"
+              >
+                <div
+                  class="absolute inset-0 rounded-full border-4 border-blue-500/30 animate-ping-slow"
+                ></div>
+                <span class="text-3xl font-bold text-blue-500">1</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div
+          class="relative z-10 mb-16 md:mb-24 animate-on-scroll"
+          data-delay="200"
+        >
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <div class="order-2 flex justify-center">
+              <div
+                class="relative w-24 h-24 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center shadow-lg"
+              >
+                <div
+                  class="absolute inset-0 rounded-full border-4 border-indigo-500/30 animate-ping-slow"
+                ></div>
+                <span class="text-3xl font-bold text-indigo-500">2</span>
+              </div>
+            </div>
+            <div class="order-1">
+              <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                Quantum AI Processing
+              </h3>
+              <p class="text-gray-600 dark:text-gray-300">
+                Our hybrid quantum-classical model analyzes the image using
+                advanced computer vision and quantum computing techniques.
+              </p>
+              <ul class="mt-4 space-y-2">
+                <li class="flex items-center text-gray-600 dark:text-gray-300">
+                  <svg
+                    class="h-5 w-5 text-green-500 mr-2 flex-shrink-0"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                  <span>Advanced neural networks identify patterns</span>
+                </li>
+                <li class="flex items-center text-gray-600 dark:text-gray-300">
+                  <svg
+                    class="h-5 w-5 text-green-500 mr-2 flex-shrink-0"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                  <span>Quantum algorithms enhance detection accuracy</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="relative z-10 animate-on-scroll" data-delay="400">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <div class="order-2 md:order-1">
+              <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                Get Detailed Results
+              </h3>
+              <p class="text-gray-600 dark:text-gray-300">
+                Receive comprehensive results with visualizations, confidence
+                scores, and personalized recommendations.
+              </p>
+              <ul class="mt-4 space-y-2">
+                <li class="flex items-center text-gray-600 dark:text-gray-300">
+                  <svg
+                    class="h-5 w-5 text-green-500 mr-2 flex-shrink-0"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                  <span>Visual highlighting of detected features</span>
+                </li>
+                <li class="flex items-center text-gray-600 dark:text-gray-300">
+                  <svg
+                    class="h-5 w-5 text-green-500 mr-2 flex-shrink-0"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                  <span>Personalized health recommendations</span>
+                </li>
+              </ul>
+            </div>
+            <div class="order-1 md:order-2 flex justify-center">
+              <div
+                class="relative w-24 h-24 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center shadow-lg"
+              >
+                <div
+                  class="absolute inset-0 rounded-full border-4 border-purple-500/30 animate-ping-slow"
+                ></div>
+                <span class="text-3xl font-bold text-purple-500">3</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA Section -->
+  <div class="relative bg-gradient-to-r from-blue-800 to-indigo-900 py-16">
+    <div class="absolute inset-0 overflow-hidden">
+      <svg
+        class="absolute right-0 bottom-0 transform translate-x-1/3 opacity-20"
+        width="800"
+        height="800"
+        fill="none"
+      >
+        <defs>
+          <linearGradient id="gradient" x1="50%" y1="0%" x2="50%" y2="100%">
+            <stop offset="0%" stop-color="white" stop-opacity="0.1"></stop>
+            <stop offset="100%" stop-color="white" stop-opacity="0.05"></stop>
+          </linearGradient>
+        </defs>
+        <circle cx="400" cy="400" r="400" fill="url(#gradient)" />
+      </svg>
+      <svg
+        class="absolute left-0 top-0 transform -translate-x-1/3 opacity-20"
+        width="600"
+        height="600"
+        fill="none"
+      >
+        <defs>
+          <linearGradient id="gradient2" x1="50%" y1="0%" x2="50%" y2="100%">
+            <stop offset="0%" stop-color="white" stop-opacity="0.1"></stop>
+            <stop offset="100%" stop-color="white" stop-opacity="0.05"></stop>
+          </linearGradient>
+        </defs>
+        <circle cx="300" cy="300" r="300" fill="url(#gradient2)" />
+      </svg>
+    </div>
+    <div
+      class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20 text-center"
+    >
+      <h2
+        class="text-3xl font-extrabold tracking-tight text-white sm:text-4xl animate-on-scroll"
+      >
+        Ready to experience the future of eye care?
+      </h2>
+      <p
+        class="mt-6 max-w-xl mx-auto text-xl text-blue-100 animate-on-scroll"
+        data-delay="200"
+      >
+        Join thousands of users who trust our quantum-powered technology to
+        monitor their eye health.
+      </p>
+      <div
+        class="mt-10 sm:flex sm:justify-center animate-on-scroll"
+        data-delay="400"
+      >
+        {% if not session.get('user_id') %}
+        <a
+          href="{{ url_for('register') }}"
+          class="w-full sm:w-auto px-8 py-4 text-lg font-medium rounded-lg shadow-lg bg-white text-blue-700 hover:text-blue-800 transform transition hover:-translate-y-1 hover:shadow-xl inline-block mx-2 mb-4 sm:mb-0"
+        >
+          Get Started For Free
+        </a>
+        {% else %}
+        <a
+          href="{{ url_for('analyze_image') }}"
+          class="w-full sm:w-auto px-8 py-4 text-lg font-medium rounded-lg shadow-lg bg-white text-blue-700 hover:text-blue-800 transform transition hover:-translate-y-1 hover:shadow-xl inline-block mx-2"
+        >
+          Try It Now
+        </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
 </div>
+
+{% endblock %} {% block scripts %}
+<!-- GSAP for advanced animations -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/ScrollTrigger.min.js"></script>
+
+<script>
+  // Create a global flag to track initialization
+  window.particlesInitialized = false;
+
+  // Helper function to check if we're in light mode
+  function isLightMode() {
+    return !document.documentElement.classList.contains("dark");
+  }
+
+  // First, make sure all the content is visible by default
+  document.addEventListener("DOMContentLoaded", function () {
+    // Make all animate-on-scroll elements visible immediately as a fallback
+    document.querySelectorAll(".animate-on-scroll").forEach(function (el) {
+      el.style.opacity = 1;
+      el.style.transform = "translateY(0)";
+      el.style.visibility = "visible";
+    });
+
+    // Initialize particles - first attempt immediate
+    initParticles();
+
+    // Fallback: Try again after multiple delays to ensure it runs
+    for (let i = 1; i <= 5; i++) {
+      setTimeout(initParticles, i * 500);
+    }
+
+    // Define the particles initialization function
+    function initParticles() {
+      // Skip if already initialized or if the container doesn't exist
+      if (
+        window.particlesInitialized ||
+        !document.getElementById("particles-js")
+      ) {
+        return;
+      }
+
+      // Skip if particlesJS isn't loaded yet
+      if (!window.particlesJS) {
+        console.log("particles.js not available yet, will retry");
+        return;
+      }
+
+      try {
+        const isDark = !isLightMode();
+        const particleColor = isDark ? "#ffffff" : "#3730a3"; // White in dark mode, darker indigo in light
+        const particleOpacity = isDark ? 0.3 : 0.6; // More visible in light mode
+        const lineColor = isDark ? "#ffffff" : "#3730a3";
+        const lineOpacity = isDark ? 0.2 : 0.4;
+
+        console.log(
+          "Initializing particles.js with color: " +
+            particleColor +
+            " (Dark mode: " +
+            isDark +
+            ")"
+        );
+
+        particlesJS("particles-js", {
+          particles: {
+            number: {
+              value: 100, // More particles
+              density: {
+                enable: true,
+                value_area: 800,
+              },
+            },
+            color: {
+              value: particleColor,
+            },
+            shape: {
+              type: "circle",
+              stroke: {
+                width: 0,
+                color: "#000000",
+              },
+            },
+            opacity: {
+              value: particleOpacity,
+              random: true,
+              anim: {
+                enable: true,
+                speed: 1,
+                opacity_min: 0.1,
+                sync: false,
+              },
+            },
+            size: {
+              value: 4, // Larger particles
+              random: true,
+              anim: {
+                enable: true,
+                speed: 2,
+                size_min: 0.1,
+                sync: false,
+              },
+            },
+            line_linked: {
+              enable: true,
+              distance: 150,
+              color: lineColor,
+              opacity: lineOpacity,
+              width: 1.5, // Thicker lines
+            },
+            move: {
+              enable: true,
+              speed: 2, // Faster movement
+              direction: "none",
+              random: true,
+              straight: false,
+              out_mode: "out",
+              bounce: false,
+            },
+          },
+          interactivity: {
+            detect_on: "canvas",
+            events: {
+              onhover: {
+                enable: true,
+                mode: "bubble",
+              },
+              onclick: {
+                enable: true,
+                mode: "push",
+              },
+              resize: true,
+            },
+            modes: {
+              bubble: {
+                distance: 200,
+                size: 6,
+                duration: 2,
+                opacity: 0.8,
+                speed: 3,
+              },
+              push: {
+                particles_nb: 4,
+              },
+            },
+          },
+          retina_detect: true,
+        });
+
+        // Mark as initialized
+        window.particlesInitialized = true;
+        console.log("Particles initialization complete");
+      } catch (e) {
+        console.error("Error initializing particles:", e);
+      }
+    }
+
+    // In case of theme changes, reinitialize particles
+    const themeToggle = document.querySelector("#theme-toggle");
+    if (themeToggle) {
+      themeToggle.addEventListener("click", function () {
+        // Mark as not initialized so we can reinitialize
+        window.particlesInitialized = false;
+
+        // Give DOM time to update
+        setTimeout(function () {
+          // Clear previous particles
+          if (document.getElementById("particles-js")) {
+            document.getElementById("particles-js").innerHTML = "";
+          }
+
+          // Reinitialize with new theme colors
+          initParticles();
+        }, 100);
+      });
+    }
+
+    // Ensure GSAP is loaded before initializing animations
+    function initGSAPAnimations() {
+      if (window.gsap && window.ScrollTrigger) {
+        // Initialize GSAP ScrollTrigger for scroll animations
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Reset the styles that were set as fallback
+        document.querySelectorAll(".animate-on-scroll").forEach(function (el) {
+          el.style.opacity = 0;
+          el.style.transform = "translateY(50px)";
+        });
+
+        // Apply animations with a slight delay to ensure DOM is ready
+        setTimeout(function () {
+          // Animate elements when they come into view
+          gsap.utils.toArray(".animate-on-scroll").forEach((element, i) => {
+            const delay = element.dataset.delay
+              ? parseFloat(element.dataset.delay) / 1000
+              : 0;
+
+            gsap.from(element, {
+              y: 50,
+              opacity: 0,
+              duration: 0.8,
+              delay: delay,
+              scrollTrigger: {
+                trigger: element,
+                start: "top 90%", // Trigger earlier
+                toggleActions: "play none none none",
+              },
+              onComplete: function () {
+                // Ensure element stays visible after animation
+                element.style.opacity = 1;
+                element.style.transform = "translateY(0)";
+                element.style.visibility = "visible";
+              },
+            });
+          });
+        }, 100);
+
+        // Floating animation for the hero image
+        gsap.to(".animate-float", {
+          y: -20,
+          duration: 2,
+          repeat: -1,
+          yoyo: true,
+          ease: "power1.inOut",
+        });
+      } else {
+        // If GSAP didn't load, retry after a short delay
+        setTimeout(initGSAPAnimations, 100);
+      }
+    }
+
+    // Start the GSAP initialization
+    initGSAPAnimations();
+
+    // Fix scroll functionality
+    const scrollDownButton = document.querySelector(".animate-bounce a");
+    if (scrollDownButton) {
+      scrollDownButton.addEventListener("click", function (e) {
+        e.preventDefault();
+        const features = document.getElementById("features");
+        if (features) {
+          features.scrollIntoView({ behavior: "smooth" });
+        }
+      });
+    }
+
+    // Make sure auth links work properly
+    const fixLinks = function () {
+      // Fix login and register buttons
+      const authButtons = document.querySelectorAll(
+        'a[href*="login"], a[href*="register"]'
+      );
+      authButtons.forEach((button) => {
+        button.addEventListener("click", function (e) {
+          // Remove any click prevention
+          e.stopPropagation();
+          // Let the normal href navigation happen
+          return true;
+        });
+      });
+    };
+
+    // Run fix links
+    fixLinks();
+
+    // Additional theme-specific fixes
+    const isLightTheme =
+      document.documentElement.classList.contains("light") ||
+      !document.documentElement.classList.contains("dark");
+
+    if (isLightTheme) {
+      // Enhance text contrast in light mode
+      document
+        .querySelectorAll(".text-gray-600, .text-gray-500")
+        .forEach((el) => {
+          el.style.color = "#374151"; // Darker gray for better contrast
+        });
+
+      // Ensure hero section text is visible
+      document
+        .querySelectorAll(
+          ".relative.overflow-hidden.min-h-screen .text-white, .relative.overflow-hidden.min-h-screen .text-blue-100"
+        )
+        .forEach((el) => {
+          el.style.textShadow = "0px 0px 10px rgba(0,0,0,0.5)";
+        });
+
+      // Ensure feature cards stand out
+      document.querySelectorAll(".feature-card .bg-white").forEach((el) => {
+        el.style.boxShadow = "0 4px 12px -2px rgba(0, 0, 0, 0.12)";
+      });
+    }
+  });
+</script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Initialize particles
+    if (typeof initParticles === "function") {
+      initParticles();
+    }
+
+    // Initialize scroll animations
+    initScrollAnimations();
+  });
+
+  function initScrollAnimations() {
+    const elements = document.querySelectorAll(".animate-on-scroll");
+
+    // First check for elements already in viewport on page load
+    checkElements();
+
+    // Then listen for scroll events
+    window.addEventListener("scroll", checkElements);
+
+    function checkElements() {
+      const triggerBottom = window.innerHeight * 0.8;
+
+      elements.forEach((element) => {
+        const elementTop = element.getBoundingClientRect().top;
+
+        if (elementTop < triggerBottom) {
+          element.classList.add("visible");
+        }
+      });
+    }
+  }
+</script>
+
+<style>
+  /* Remove this override so animations work again */
+  /* .animate-on-scroll {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+    visibility: visible !important;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  } */
+
+  /* Initial state for animate-on-scroll elements */
+  .animate-on-scroll {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  /* The visible class will be added by JavaScript */
+  .animate-on-scroll.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Add delay to stagger animations */
+  .animate-on-scroll[data-delay="200"] {
+    transition-delay: 0.2s;
+  }
+
+  .animate-on-scroll[data-delay="400"] {
+    transition-delay: 0.4s;
+  }
+
+  /* Fix light theme visibility issues */
+  .bg-white.dark\:bg-gray-900 {
+    background-color: #ffffff;
+  }
+
+  /* Ensure all white backgrounds are properly dark in dark mode */
+  html.dark .bg-white {
+    background-color: #1e293b !important;
+  }
+
+  /* Fix feature cards in dark mode */
+  html.dark .feature-card .bg-white {
+    background-color: #1e293b !important;
+    border-color: #4a5568 !important;
+  }
+
+  /* Fix all card backgrounds in dark mode */
+  html.dark .rounded-xl.shadow-xl {
+    background-color: #1e293b !important;
+  }
+
+  /* Ensure the How it works section has proper dark background */
+  html.dark .relative.bg-white.dark\:bg-gray-900 {
+    background-color: #111827 !important;
+  }
+
+  /* Fix the background of the main container in dark mode */
+  html.dark div.bg-white.dark\:bg-gray-900 {
+    background-color: #0f172a !important;
+  }
+
+  /* Fix card backgrounds and text colors */
+  html.dark .bg-white\/80,
+  html.dark .bg-white\/90 {
+    background-color: rgba(30, 41, 59, 0.8) !important;
+  }
+
+  /* Fix all remaining white backgrounds */
+  html.dark [class*="bg-white"] {
+    background-color: #1e293b !important;
+  }
+
+  /* Ensure all grays are properly styled in dark mode */
+  html.dark .bg-gray-100 {
+    background-color: #1e293b !important;
+  }
+
+  html.dark .bg-gray-50 {
+    background-color: #0f172a !important;
+  }
+
+  /* Text color adjustments for light/dark mode */
+  html:not(.dark) .hero-heading {
+    color: #1e293b !important;
+    text-shadow: none !important;
+  }
+
+  html:not(.dark) .hero-description {
+    color: #334155 !important;
+    text-shadow: none !important;
+  }
+
+  html.dark .hero-heading,
+  html.dark .hero-description {
+    color: #ffffff !important;
+    text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Ensure the hero section text is visible in both themes */
+  .relative.overflow-hidden.min-h-screen .text-white {
+    color: #ffffff !important;
+    text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Enhance feature section in light mode */
+  #features {
+    background-color: #f5f7ff;
+  }
+
+  /* Ensure feature cards are visible in light mode */
+  .feature-card .bg-white {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+      0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
+  /* Enhance process section in light mode */
+  .relative.bg-white.dark\:bg-gray-900.py-16 h3 {
+    color: #111827;
+  }
+
+  /* Timeline connector visibility in light mode */
+  .bg-gradient-to-b.from-blue-500.to-purple-500 {
+    opacity: 0.8;
+  }
+
+  /* Better CTA visibility in light mode */
+  .relative.bg-gradient-to-r.from-blue-800.to-indigo-900 {
+    color: white !important;
+    background: linear-gradient(to right, #4f46e5, #7e22ce) !important;
+  }
+
+  /* Improve numbered circles visibility */
+  .bg-blue-100,
+  .bg-indigo-100,
+  .bg-purple-100 {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  /* Enhance particles visibility in light mode */
+  .light #particles-js canvas {
+    opacity: 1 !important;
+  }
+
+  /* Remove this to let our new light-colored gradient work */
+  /* html:not(.dark) .absolute.inset-0.bg-gradient-to-br {
+    background: linear-gradient(
+      to bottom right,
+      rgba(79, 70, 229, 0.85),
+      rgba(147, 51, 234, 0.85)
+    ) !important;
+  } */
+
+  /* Enhance text colors for better readability */
+  html:not(.dark) .text-gray-600 {
+    color: #4b5563 !important;
+  }
+
+  html:not(.dark) .text-gray-500 {
+    color: #6b7280 !important;
+  }
+
+  /* Make feature cards more attractive */
+  .feature-card .bg-blue-500 {
+    background-color: #4f46e5 !important;
+  }
+
+  .feature-card .bg-purple-500 {
+    background-color: #8b5cf6 !important;
+  }
+
+  .feature-card .bg-green-500 {
+    background-color: #10b981 !important;
+  }
+
+  /* Better text coloring for feature links */
+  .text-blue-500 {
+    color: #4f46e5 !important;
+  }
+
+  .text-purple-500 {
+    color: #8b5cf6 !important;
+  }
+
+  .text-green-500 {
+    color: #10b981 !important;
+  }
+
+  /* Update blue colors to a more modern indigo */
+  .bg-blue-600 {
+    background-color: #4f46e5 !important;
+  }
+
+  .hover\:bg-blue-700:hover {
+    background-color: #4338ca !important;
+  }
+
+  @keyframes ping-slow {
+    0% {
+      transform: scale(1);
+      opacity: 0.8;
+    }
+    75%,
+    100% {
+      transform: scale(1.5);
+      opacity: 0;
+    }
+  }
+  .animate-ping-slow {
+    animation: ping-slow 3s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Feature card hover effect */
+  .feature-card {
+    transition: all 0.3s ease;
+  }
+
+  /* Fix button styles to ensure they're clickable */
+  a.relative.group,
+  a.px-6 {
+    position: relative;
+    z-index: 30;
+    cursor: pointer;
+    pointer-events: auto !important;
+    text-decoration: none;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  }
+
+  /* Fix button text colors in light mode */
+  @media (prefers-color-scheme: light), html:not(.dark) {
+    .bg-gradient-to-r.from-blue-500.to-cyan-500 {
+      color: #1e293b !important;
+    }
+
+    /* Make buttons have readable text */
+    .bg-blue-600 {
+      color: white !important;
+    }
+
+    /* Exception for specific buttons that need dark text */
+    .bg-gradient-to-r.from-blue-500.to-cyan-500.light\:text-gray-800 {
+      color: #1e293b !important;
+    }
+  }
+
+  /* Ensure feature card links are clickable */
+  .feature-card a {
+    position: relative;
+    z-index: 40;
+    cursor: pointer !important;
+    pointer-events: auto !important;
+  }
+
+  /* Fix colors for feature-section numbered circles */
+  html:not(.dark)
+    .flex.items-center.justify-center.h-12.w-12.rounded-md.bg-blue-600 {
+    color: white !important;
+  }
+
+  html:not(.dark) .scroll-indicator {
+    color: #1e293b !important;
+  }
+
+  /* Ensure good contrast for all buttons in light mode */
+  html:not(.dark) .bg-blue-600 {
+    color: white !important;
+  }
+
+  /* Override conflicting styles */
+  html.light .bg-gradient-to-r.from-blue-500.to-cyan-500 .text-white {
+    color: #1e293b !important;
+  }
+
+  /* Better text colors in dark mode */
+  html.dark .text-gray-900 {
+    color: #f3f4f6 !important;
+  }
+
+  html.dark .text-gray-800 {
+    color: #e5e7eb !important;
+  }
+
+  html.dark .text-gray-700 {
+    color: #d1d5db !important;
+  }
+
+  html.dark .text-gray-600 {
+    color: #9ca3af !important;
+  }
+
+  /* Fix light backgrounds in the process steps */
+  html.dark .bg-blue-100 {
+    background-color: rgba(59, 130, 246, 0.2) !important;
+  }
+
+  html.dark .bg-indigo-100 {
+    background-color: rgba(99, 102, 241, 0.2) !important;
+  }
+
+  html.dark .bg-purple-100 {
+    background-color: rgba(139, 92, 246, 0.2) !important;
+  }
+
+  /* Make borders more visible in dark mode */
+  html.dark .border-gray-200 {
+    border-color: #374151 !important;
+  }
+</style>
 {% endblock %}

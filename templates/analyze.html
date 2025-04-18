@@ -48,89 +48,115 @@ endblock %} {% block content %}
     </div>
 
     <!-- Results Section (Initially Hidden) -->
-    <div id="results" class="hidden space-y-8">
+    <div
+      id="results"
+      class="bg-white/80 backdrop-blur-sm rounded-lg shadow-lg p-6 mt-8 hidden"
+    >
+      <div class="text-center mb-4">
+        <div
+          class="inline-flex items-center justify-center px-4 py-1.5 mb-2 rounded-full bg-blue-100 dark:bg-blue-900/30"
+        >
+          <span class="text-sm font-semibold text-blue-600 dark:text-blue-400"
+            >Analysis Complete</span
+          >
+        </div>
+        <h3 class="text-xl font-bold text-gray-800 dark:text-white">
+          Analysis Results
+        </h3>
+        <p class="text-gray-600 dark:text-gray-300 text-sm mt-1">
+          Results are for informational purposes only
+        </p>
+        <!-- Add notification about adjusted sensitivity -->
+        <div
+          class="mt-2 bg-yellow-50 p-2 rounded-md border border-yellow-200 text-sm text-yellow-800"
+        >
+          <strong>Note:</strong> Images with confidence greater than 40% will be
+          classified as cataract. Please consult a medical professional for
+          diagnosis.
+        </div>
+      </div>
       <!-- Prediction Results -->
-      <div class="bg-white/80 backdrop-blur-sm rounded-lg shadow-lg p-6">
-        <h3 class="text-xl font-bold mb-4 text-gray-800">Analysis Results</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="space-y-4">
-            <div class="p-4 rounded-lg bg-white/90">
-              <p class="text-lg font-semibold text-gray-800">Prediction:</p>
-              <p
-                id="prediction-result"
-                class="text-xl font-bold text-blue-600"
-              ></p>
-            </div>
-            <div class="p-4 rounded-lg bg-white/90">
-              <p class="text-lg font-semibold text-gray-800">Confidence:</p>
-              <div class="relative pt-1">
-                <div
-                  class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-gray-200"
-                >
-                  <div
-                    id="confidence-bar"
-                    class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-500 transition-all duration-500"
-                  ></div>
-                </div>
-                <p
-                  id="confidence-value"
-                  class="text-right text-blue-600 font-semibold"
-                ></p>
-              </div>
-            </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="space-y-4">
+          <div class="p-4 rounded-lg bg-white/90">
+            <p class="text-lg font-semibold text-gray-800">Prediction:</p>
+            <p
+              id="prediction-result"
+              class="text-xl font-bold text-blue-600"
+            ></p>
           </div>
-          <div class="space-y-4">
-            <div class="p-4 rounded-lg bg-white/90">
-              <p class="text-lg font-semibold text-gray-800 mb-2">
-                Recommendations:
-              </p>
-              <ul
-                id="recommendations-list"
-                class="list-disc list-inside space-y-2 text-gray-700"
-              ></ul>
+          <div class="p-4 rounded-lg bg-white/90">
+            <p class="text-lg font-semibold text-gray-800">Confidence:</p>
+            <div class="relative pt-1">
+              <div
+                class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-gray-200"
+              >
+                <div
+                  id="confidence-bar"
+                  class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-500 transition-all duration-500"
+                ></div>
+              </div>
+              <p
+                id="confidence-value"
+                class="text-right text-blue-600 font-semibold"
+              ></p>
             </div>
           </div>
         </div>
+        <div class="space-y-4">
+          <div class="p-4 rounded-lg bg-white/90">
+            <p class="text-lg font-semibold text-gray-800 mb-2">
+              Recommendations:
+            </p>
+            <ul
+              id="recommendations-list"
+              class="list-disc list-inside space-y-2 text-gray-700"
+            ></ul>
+          </div>
+        </div>
       </div>
+    </div>
 
-      <!-- Visualizations -->
-      <div class="bg-white/80 backdrop-blur-sm rounded-lg shadow-lg p-6">
-        <h3 class="text-xl font-bold mb-4 text-gray-800 dark:text-white">
-          Visualizations
-        </h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <p class="font-semibold mb-2">Original Image</p>
-            <img
-              id="original-image"
-              class="w-full rounded-lg shadow-md"
-              alt="Original Image"
-            />
-          </div>
-          <div>
-            <p class="font-semibold mb-2">Activation Map</p>
-            <img
-              id="heatmap-image"
-              class="w-full rounded-lg shadow-md"
-              alt="Activation Map"
-            />
-          </div>
-          <div>
-            <p class="font-semibold mb-2">Overlay Visualization</p>
-            <img
-              id="overlay-image"
-              class="w-full rounded-lg shadow-md"
-              alt="Overlay Visualization"
-            />
-          </div>
-          <div>
-            <p class="font-semibold mb-2">Edge Detection</p>
-            <img
-              id="edges-image"
-              class="w-full rounded-lg shadow-md"
-              alt="Edge Detection"
-            />
-          </div>
+    <!-- Visualizations -->
+    <div
+      id="visualizations"
+      class="bg-white/80 backdrop-blur-sm rounded-lg shadow-lg p-6 mt-8 hidden"
+    >
+      <h3 class="text-xl font-bold mb-4 text-gray-800 dark:text-white">
+        Visualizations
+      </h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <p class="font-semibold mb-2">Original Image</p>
+          <img
+            id="original-image"
+            class="w-full rounded-lg shadow-md"
+            alt="Original Image"
+          />
+        </div>
+        <div>
+          <p class="font-semibold mb-2">Activation Map</p>
+          <img
+            id="heatmap-image"
+            class="w-full rounded-lg shadow-md"
+            alt="Activation Map"
+          />
+        </div>
+        <div>
+          <p class="font-semibold mb-2">Overlay Visualization</p>
+          <img
+            id="overlay-image"
+            class="w-full rounded-lg shadow-md"
+            alt="Overlay Visualization"
+          />
+        </div>
+        <div>
+          <p class="font-semibold mb-2">Edge Detection</p>
+          <img
+            id="edges-image"
+            class="w-full rounded-lg shadow-md"
+            alt="Edge Detection"
+          />
         </div>
       </div>
     </div>
@@ -182,9 +208,12 @@ endblock %} {% block content %}
       const file = fileInput.files[0];
       if (!file) return;
 
+      // Hide previous results and visualizations
+      results.classList.add("hidden");
+      document.getElementById("visualizations").classList.add("hidden");
+
       // Show loading spinner
       loading.classList.remove("hidden");
-      results.classList.add("hidden");
 
       const formData = new FormData();
       formData.append("file", file);
@@ -242,8 +271,9 @@ endblock %} {% block content %}
             overlayImg.alt = "Overlay not available";
           }
 
-          // Show results
+          // Show results and visualizations
           results.classList.remove("hidden");
+          document.getElementById("visualizations").classList.remove("hidden");
         } else {
           alert(`Error: ${data.error || "Unknown error"}`);
         }

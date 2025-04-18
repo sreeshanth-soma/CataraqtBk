@@ -46,13 +46,20 @@ class User(db.Model):
     username = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
     name = db.Column(db.String(80), nullable=False)
+    email = db.Column(db.String(120), nullable=True)
+    bio = db.Column(db.Text, nullable=True)
+    location = db.Column(db.String(100), nullable=True)
+    profile_picture = db.Column(db.String(255), nullable=True, default='default_profile.png')
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     analyses = db.relationship('Analysis', backref='user', lazy=True)
 
-    def __init__(self, username, password, name):
+    def __init__(self, username, password, name, email=None, bio=None, location=None):
         self.username = username
         self.password = generate_password_hash(password)
         self.name = name
+        self.email = email
+        self.bio = bio
+        self.location = location
 
 # Analysis model
 class Analysis(db.Model):
@@ -112,12 +119,16 @@ def get_recommendations(prediction, confidence):
 
 @app.route('/')
 def index():
-    return render_template('home.html')
+    return render_template('home.html', ensure_content=True)
+
+@app.route('/technology-details')
+def technology_details():
+    return render_template('technology_details.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if 'user_id' in session:
-        return redirect(url_for('dashboard'))
+        return redirect(url_for('index'))
         
     if request.method == 'POST':
         username = request.form.get('username')
@@ -129,8 +140,10 @@ def login():
             session['user_id'] = user.id
             session['username'] = user.username
             session['user_name'] = user.name
+            if user.profile_picture:
+                session['user_profile_picture'] = user.profile_picture
             flash('Logged in successfully!', 'success')
-            return redirect(url_for('dashboard'))
+            return redirect(url_for('index'))
         else:
             flash('Invalid username or password', 'error')
     
@@ -145,11 +158,21 @@ def register():
         username = request.form.get('username')
         password = request.form.get('password')
         name = request.form.get('name', username)
+        email = request.form.get('email')
+        bio = request.form.get('bio')
+        location = request.form.get('location')
         
         if User.query.filter_by(username=username).first():
             flash('Username already exists', 'error')
         else:
-            new_user = User(username=username, password=password, name=name)
+            new_user = User(
+                username=username, 
+                password=password, 
+                name=name,
+                email=email,
+                bio=bio,
+                location=location
+            )
             db.session.add(new_user)
             db.session.commit()
             flash('Registration successful! Please login.', 'success')
@@ -217,11 +240,16 @@ def analyze_image():
                     prediction_tensor = model(img_tensor) 
                     raw_confidence = float(prediction_tensor[0][0]) # Model's raw output (0..1)
                     
-                    # --- Final Interpretation Attempt: Assume 0=Cataract, 1=Normal --- #
-                    result = "Cataract Detected" if raw_confidence < 0.5 else "No Cataract Detected"
-                    # Calculate a score where higher means more likely cataract for storage/display
-                    cataract_likelihood = 1.0 - raw_confidence 
-                    # --- End Interpretation --- #
+                    # Print debug info about confidence levels
+                    print(f"DEBUG: Raw confidence value for cataract: {raw_confidence}", file=sys.stderr)
+                    
+                    # Set threshold to 40% (0.4) for cataract detection
+                    cataract_threshold = 0.4
+                    result = "Cataract Detected" if raw_confidence > cataract_threshold else "No Cataract Detected"
+                    print(f"DEBUG: Final prediction: {result} (threshold={cataract_threshold})", file=sys.stderr)
+                    
+                    # Store raw confidence - higher means more likely cataract
+                    cataract_likelihood = raw_confidence
                 
                 # Save analysis to history - Store the calculated cataract likelihood
                 analysis = Analysis(
@@ -344,6 +372,9 @@ def edit_profile():
     
     if request.method == 'POST':
         name = request.form.get('name')
+        email = request.form.get('email')
+        bio = request.form.get('bio')
+        location = request.form.get('location')
         current_password = request.form.get('current_password')
         new_password = request.form.get('new_password')
         
@@ -351,7 +382,33 @@ def edit_profile():
             flash('Current password is incorrect', 'error')
             return redirect(url_for('edit_profile'))
         
+        # Update user information
         user.name = name
+        user.email = email
+        user.bio = bio
+        user.location = location
+        
+        # Handle profile picture upload
+        if 'profile_picture' in request.files:
+            file = request.files['profile_picture']
+            if file and file.filename != '' and allowed_file(file.filename):
+                filename = secure_filename(f"profile_{user.id}_{file.filename}")
+                filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                file.save(filepath)
+                
+                # Delete previous profile picture if it's not the default
+                if user.profile_picture and user.profile_picture != 'default_profile.png':
+                    old_filepath = os.path.join(app.config['UPLOAD_FOLDER'], user.profile_picture)
+                    if os.path.exists(old_filepath):
+                        os.remove(old_filepath)
+                
+                # Update user's profile picture
+                user.profile_picture = filename
+                
+                # Update session
+                session['user_profile_picture'] = filename
+        
+        # Update password if provided
         if new_password:
             user.password = generate_password_hash(new_password)
         
@@ -383,6 +440,21 @@ def view_analysis(analysis_id):
 def serve_upload(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
+# Create default profile picture if it doesn't exist
+def create_default_profile_picture():
+    default_profile_path = os.path.join(app.config['UPLOAD_FOLDER'], 'default_profile.png')
+    if not os.path.exists(default_profile_path):
+        # Create a simple default profile picture
+        img = np.ones((200, 200, 3), dtype=np.uint8) * 200  # Light gray background
+        cv2.circle(img, (100, 100), 80, (70, 130, 180), -1)  # Blue circle
+        cv2.putText(img, "User", (65, 110), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 255, 255), 2)
+        cv2.imwrite(default_profile_path, img)
+
+# Setup function to run initialization tasks
+def setup_app():
+    # Create default profile picture
+    create_default_profile_picture()
+
 if __name__ == '__main__':
     # REMOVED folder check from here 
     # if not os.path.exists(app.config['UPLOAD_FOLDER']):
@@ -390,5 +462,6 @@ if __name__ == '__main__':
         
     with app.app_context():
         db.create_all()
+        setup_app()  # Run setup tasks
         
     app.run(debug=True, host='0.0.0.0', port=5001) 

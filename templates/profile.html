@@ -4,13 +4,20 @@
   <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
     <div class="p-6 md:p-8 border-b border-gray-200 dark:border-gray-700">
       <div class="flex flex-col md:flex-row items-center md:items-start">
-        <!-- Placeholder for potential avatar in future -->
+        <!-- User profile picture -->
         <div class="flex-shrink-0 mb-4 md:mb-0 md:mr-6">
+          {% if user.profile_picture %}
+          <img
+            src="{{ url_for('serve_upload', filename=user.profile_picture) }}"
+            alt="{{ user.name }}'s profile picture"
+            class="h-16 w-16 rounded-full object-cover border-2 border-gray-200 dark:border-gray-600 shadow-md"
+          />
+          {% else %}
           <span
-            class="inline-block h-20 w-20 rounded-full overflow-hidden bg-gray-100 dark:bg-gray-700 flex items-center justify-center"
+            class="inline-block h-16 w-16 rounded-full overflow-hidden bg-gray-100 dark:bg-gray-700 flex items-center justify-center"
           >
             <svg
-              class="h-16 w-16 text-gray-400 dark:text-gray-500"
+              class="h-10 w-10 text-gray-400 dark:text-gray-500"
               fill="currentColor"
               viewBox="0 0 24 24"
             >
@@ -19,17 +26,21 @@
               />
             </svg>
           </span>
+          {% endif %}
         </div>
-        <div>
+
+        <div class="text-center md:text-left">
           <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
             {{ user.name }}
           </h2>
           <p class="text-sm text-gray-500 dark:text-gray-400">
             @{{ user.username }}
           </p>
+
           <p class="mt-2 text-sm text-gray-600 dark:text-gray-300">
             Member Since: {{ user.created_at.strftime('%B %d, %Y') }}
           </p>
+
           <a
             href="{{ url_for('edit_profile') }}"
             class="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-800"
@@ -47,6 +58,102 @@
             Edit Profile
           </a>
         </div>
+      </div>
+    </div>
+
+    <!-- User Details Cards -->
+    <div class="p-6 md:p-8 border-b border-gray-200 dark:border-gray-700">
+      <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+        User Information
+      </h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        <!-- Email Card -->
+        {% if user.email %}
+        <div class="bg-blue-50 dark:bg-blue-900/30 p-4 rounded-lg">
+          <div class="flex items-center mb-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 text-blue-600 dark:text-blue-400 mr-2"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+              />
+            </svg>
+            <p class="text-sm font-medium text-blue-600 dark:text-blue-400">
+              Email
+            </p>
+          </div>
+          <p class="text-sm text-gray-700 dark:text-gray-200 break-all">
+            {{ user.email }}
+          </p>
+        </div>
+        {% endif %}
+
+        <!-- Location Card -->
+        {% if user.location %}
+        <div class="bg-green-50 dark:bg-green-900/30 p-4 rounded-lg">
+          <div class="flex items-center mb-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 text-green-600 dark:text-green-400 mr-2"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+              />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+              />
+            </svg>
+            <p class="text-sm font-medium text-green-600 dark:text-green-400">
+              Location
+            </p>
+          </div>
+          <p class="text-sm text-gray-700 dark:text-gray-200">
+            {{ user.location }}
+          </p>
+        </div>
+        {% endif %}
+
+        <!-- Bio Card -->
+        {% if user.bio %}
+        <div class="bg-purple-50 dark:bg-purple-900/30 p-4 rounded-lg">
+          <div class="flex items-center mb-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 text-purple-600 dark:text-purple-400 mr-2"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+              />
+            </svg>
+            <p class="text-sm font-medium text-purple-600 dark:text-purple-400">
+              About Me
+            </p>
+          </div>
+          <p class="text-sm text-gray-700 dark:text-gray-200">{{ user.bio }}</p>
+        </div>
+        {% endif %}
       </div>
     </div>
 
