@@ -1,0 +1,74 @@
+[
+  {
+    "name": "Aravind Eye Hospital",
+    "location": "Madurai, India",
+    "specialization": "Cataract Surgery, LASIK",
+    "rating": 4.8,
+    "phone": "+91-44-2234-5678",
+    "website": "https://www.aravind.org",
+    "image_url": "/static/images/hospitals/aravind.jpeg"
+  },
+  {
+    "name": "Wills Eye Hospital",
+    "location": "Philadelphia, USA",
+    "specialization": "Comprehensive Ophthalmology, Cataract Surgery",
+    "rating": 4.9,
+    "phone": "+1-215-928-3000",
+    "website": "https://www.willseye.org",
+    "image_url": "/static/images/hospitals/wills.jpg"
+  },
+  {
+    "name": "Moorfields Eye Hospital",
+    "location": "London, UK",
+    "specialization": "Cataract Treatment, Glaucoma",
+    "rating": 4.7,
+    "phone": "+44-20-7253-3411",
+    "website": "https://www.moorfields.nhs.uk",
+    "image_url": "/static/images/hospitals/moorfields.jpg"
+  },
+  {
+    "name": "Singapore National Eye Centre",
+    "location": "Singapore",
+    "specialization": "Cataract Surgery, Refractive Surgery",
+    "rating": 4.8,
+    "phone": "+65-6227-7255",
+    "website": "https://www.snec.com.sg",
+    "image_url": "/static/images/hospitals/snec.jpg"
+  },
+  {
+    "name": "LV Prasad Eye Institute",
+    "location": "Hyderabad, India",
+    "specialization": "Cataract Surgery, Cornea",
+    "rating": 4.7,
+    "phone": "+91-40-3061-2345",
+    "website": "https://www.lvpei.org",
+    "image_url": "/static/images/hospitals/lvprasad.jpg"
+  },
+  {
+    "name": "Bascom Palmer Eye Institute",
+    "location": "Miami, USA",
+    "specialization": "Comprehensive Eye Care, Cataract Surgery",
+    "rating": 4.9,
+    "phone": "+1-305-326-6000",
+    "website": "https://bascompalmer.org",
+    "image_url": "/static/images/hospitals/bascom.jpg"
+  },
+  {
+    "name": "Sankara Nethralaya",
+    "location": "Chennai, India",
+    "specialization": "Cataract Surgery, Retina",
+    "rating": 4.8,
+    "phone": "+91-44-2827-1616",
+    "website": "https://www.sankaranethralaya.org",
+    "image_url": "/static/images/hospitals/sankara.jpg"
+  },
+  {
+    "name": "Jules Stein Eye Institute",
+    "location": "Los Angeles, USA",
+    "specialization": "Cataract Surgery, Cornea",
+    "rating": 4.7,
+    "phone": "+1-310-825-5000",
+    "website": "https://www.uclahealth.org/eye",
+    "image_url": "/static/images/hospitals/jules.jpg"
+  }
+]

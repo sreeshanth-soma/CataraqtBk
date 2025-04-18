@@ -13,6 +13,7 @@ from datetime import timedelta
 import cv2
 import base64
 import sys
+import json
 
 app = Flask(__name__)
 
@@ -100,6 +101,16 @@ def login_required(f):
     return decorated_function
 
 def get_recommendations(prediction, confidence):
+    hospital_data_file = os.path.join(basedir, 'static/data/hospitals.json')
+    try:
+        with open(hospital_data_file, 'r') as f:
+            hospitals = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        hospitals = []
+
+    # Get top 3 hospitals for recommended consultation
+    recommended_hospitals = hospitals[:3] if hospitals else []
+    
     if prediction == "Cataract Detected":
         return [
             "Schedule an appointment with an ophthalmologist",
@@ -107,7 +118,7 @@ def get_recommendations(prediction, confidence):
             "Protect your eyes from UV radiation",
             "Consider wearing sunglasses outdoors",
             "Monitor any changes in vision"
-        ]
+        ], recommended_hospitals
     else:
         return [
             "Continue regular eye check-ups",
@@ -115,11 +126,13 @@ def get_recommendations(prediction, confidence):
             "Take regular breaks when using screens",
             "Stay hydrated for good eye health",
             "Consider using blue light filters on devices"
-        ]
+        ], []
 
 @app.route('/')
 def index():
-    return render_template('home.html', ensure_content=True)
+    if 'user_id' in session:
+        pass
+    return render_template('home.html', active_page='index')
 
 @app.route('/technology-details')
 def technology_details():
@@ -147,7 +160,7 @@ def login():
         else:
             flash('Invalid username or password', 'error')
     
-    return render_template('auth/login.html')
+    return render_template('auth/login.html', active_page='login')
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -178,7 +191,7 @@ def register():
             flash('Registration successful! Please login.', 'success')
             return redirect(url_for('login'))
     
-    return render_template('auth/register.html')
+    return render_template('auth/register.html', active_page='register')
 
 @app.route('/logout')
 def logout():
@@ -262,7 +275,7 @@ def analyze_image():
                 db.session.commit()
                 
                 # Get recommendations based on prediction and cataract likelihood
-                recommendations = get_recommendations(result, cataract_likelihood)
+                recommendations, recommended_hospitals = get_recommendations(result, cataract_likelihood)
                 
                 # --- Restore Visualizations (Attempt) --- # 
                 # Need original image as numpy array for cv2 operations
@@ -314,56 +327,64 @@ def analyze_image():
                 }
                 # --- End Restore Visualizations --- #
 
-                return jsonify({
+                # --- Prepare results dictionary for template --- #
+                results_data = {
                     'prediction': result,
                     'confidence': cataract_likelihood, # Return likelihood of cataract
                     'recommendations': recommendations,
+                    'recommended_hospitals': recommended_hospitals,
                     'visualizations': visualizations
-                })
+                }
+                
+                # --- Render HTML template instead of returning JSON --- #
+                return render_template('analyze_results.html', results=results_data, active_page='analyze') 
+                # --- End Render Template --- #
                 
             except Exception as e:
                 print(f"Error during analysis: {e}", file=sys.stderr) # Add logging
-                return jsonify({'error': str(e)}), 500
+                # Return error to the original analyze page if something goes wrong
+                flash(f"An error occurred during analysis: {e}", "error")
+                return redirect(url_for('analyze_image'))
         
-        return jsonify({'error': 'Invalid file type'}), 400
+        # Handle invalid file type by redirecting back with a flash message
+        flash("Invalid file type. Please upload JPG, PNG, or JPEG files.", "error")
+        return redirect(url_for('analyze_image'))
     
-    return render_template('analyze.html')
+    # For GET request, just render the upload form
+    return render_template('analyze.html', active_page='analyze')
 
 @app.route('/history')
 @login_required
 def history():
     # Get all analyses with pagination
     page = request.args.get('page', 1, type=int)
-    per_page = 10
-    user_id = session.get('user_id')
+    per_page = 9 # Display 9 analyses per page
+    user_analyses = Analysis.query.filter_by(user_id=session['user_id']).order_by(Analysis.created_at.desc()).paginate(page=page, per_page=per_page, error_out=False)
     
-    # Get paginated analyses
-    analyses = Analysis.query.filter_by(user_id=user_id)\
-        .order_by(Analysis.created_at.desc())\
-        .paginate(page=page, per_page=per_page, error_out=False)
-    
-    return render_template('history.html', analyses=analyses)
+    return render_template('history.html', analyses=user_analyses, active_page='history')
 
 @app.route('/profile', methods=['GET'])
 @login_required
 def profile():
     user = User.query.get(session['user_id'])
-    
-    # Calculate analysis statistics for the user
+    if not user:
+        flash('User not found.', 'error')
+        return redirect(url_for('login'))
+
+    # Calculate stats
     total_analyses = Analysis.query.filter_by(user_id=user.id).count()
-    cataract_detected = Analysis.query.filter_by(
-        user_id=user.id, 
-        prediction="Cataract Detected"
-    ).count()
+    cataract_detected = Analysis.query.filter_by(user_id=user.id, prediction='Cataract').count()
+    healthy_detected = Analysis.query.filter_by(user_id=user.id, prediction='Normal').count()
+    
+    # Handle missing profile picture more gracefully
+    profile_pic_url = url_for('serve_upload', filename=user.profile_picture if user.profile_picture else 'default_profile.png')
     
     stats = {
-        'total_analyses': total_analyses,
-        'cataract_detected': cataract_detected,
-        'no_cataract': total_analyses - cataract_detected,
-        'cataract_percentage': (cataract_detected / total_analyses * 100) if total_analyses > 0 else 0
+        'total': total_analyses,
+        'cataract': cataract_detected,
+        'healthy': healthy_detected
     }
-    
-    return render_template('profile.html', user=user, stats=stats)
+    return render_template('profile.html', user=user, stats=stats, profile_pic_url=profile_pic_url, active_page='profile')
 
 @app.route('/profile/edit', methods=['GET', 'POST'])
 @login_required
@@ -430,15 +451,38 @@ def view_analysis(analysis_id):
         return redirect(url_for('history'))
 
     # Get recommendations based on the stored prediction and confidence
-    recommendations = get_recommendations(analysis.prediction, analysis.confidence)
+    recommendations, recommended_hospitals = get_recommendations(analysis.prediction, analysis.confidence)
 
     # Note: Image preview is currently unavailable because original images are deleted after analysis.
-    return render_template('analysis_detail.html', analysis=analysis, recommendations=recommendations)
+    return render_template('analysis_detail.html', analysis=analysis, recommendations=recommendations, recommended_hospitals=recommended_hospitals, active_page='history')
 
 @app.route('/uploads/<path:filename>')
 @login_required
 def serve_upload(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
+@app.route('/hospitals')
+def hospitals():
+    """Display a list of eye hospitals that treat cataracts."""
+    # Load hospital data from JSON file
+    hospital_data_file = os.path.join(basedir, 'static/data/hospitals.json')
+    try:
+        with open(hospital_data_file, 'r') as f:
+            hospitals_list = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        hospitals_list = []  # Fallback if file doesn't exist or is invalid
+    
+    return render_template('hospitals.html', hospitals=hospitals_list, active_page='hospitals')
+
+@app.route('/set-theme', methods=['POST'])
+def set_theme():
+    theme = request.json.get('theme')
+    if theme in ['light', 'dark']:
+        session['theme'] = theme
+        response = jsonify({'success': True})
+        response.set_cookie('theme', theme, max_age=31536000)  # 1 year
+        return response
+    return jsonify({'success': False, 'error': 'Invalid theme'}), 400
 
 # Create default profile picture if it doesn't exist
 def create_default_profile_picture():
@@ -454,6 +498,11 @@ def create_default_profile_picture():
 def setup_app():
     # Create default profile picture
     create_default_profile_picture()
+
+@app.before_request
+def check_theme():
+    if 'theme' not in session and 'theme' in request.cookies:
+        session['theme'] = request.cookies.get('theme')
 
 if __name__ == '__main__':
     # REMOVED folder check from here 

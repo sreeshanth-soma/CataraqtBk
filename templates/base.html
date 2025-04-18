@@ -1,12 +1,21 @@
 <!DOCTYPE html>
-<html lang="en" class="light">
+<html lang="en" class="{{ 'dark' if session.get('theme') == 'dark' else '' }}">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{% block title %}{% endblock %}</title>
+    <title>{% block title %}CataraQt{% endblock %}</title>
     <link
       href="{{ url_for('static', filename='css/output.css') }}"
       rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <link
+      rel="icon"
+      href="{{ url_for('static', filename='img/favicon.ico') }}"
+      type="image/x-icon"
     />
     {% block head_extra %}{% endblock %}
     <style>
@@ -41,21 +50,23 @@
       }
 
       .nav-link {
-        transition: all 0.3s ease;
+        @apply px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-150;
       }
 
-      .nav-link:hover {
-        transform: translateY(-2px);
+      .nav-link.active {
+        @apply bg-blue-100 dark:bg-gray-700 text-blue-700 dark:text-white font-semibold;
       }
 
       .btn-primary {
-        transition: all 0.3s ease;
+        @apply px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-300 shadow-sm;
       }
 
-      .btn-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-          0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      .btn-secondary {
+        @apply px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 transition-colors duration-300 shadow-sm;
+      }
+
+      .dark .btn-secondary {
+        @apply bg-gray-600 text-gray-100 hover:bg-gray-500 focus:ring-gray-500;
       }
 
       /* Modern color scheme */
@@ -245,15 +256,189 @@
       }
 
       /* Override inline styles in dark mode for navbar links */
-      html.dark .nav-link {
+      /* Removing potentially problematic override */
+      /* html.dark .nav-link {
+        color: white !important;
+      } */
+
+      /* Global styles */
+      :root {
+        /* Light theme (default) */
+        --bg-primary: #ffffff;
+        --bg-secondary: #f3f4f6;
+        --text-primary: #1f2937;
+        --text-secondary: #1f2937; /* Darker color for better contrast */
+        --accent-color: #3b82f6;
+        --accent-hover: #2563eb;
+        --card-bg: #ffffff;
+        --card-border: #e5e7eb;
+        --nav-bg: #ffffff;
+        --card-shadow: rgba(0, 0, 0, 0.1);
+        --input-bg: #f9fafb;
+        --input-border: #d1d5db;
+        --button-primary: #3b82f6;
+        --button-hover: #2563eb;
+        --button-text: #ffffff;
+        --nav-bg: #ffffff;
+        --nav-shadow: rgba(0, 0, 0, 0.05);
+      }
+
+      /* Dark theme variables */
+      .dark {
+        --bg-primary: #111827;
+        --bg-secondary: #1f2937;
+        --text-primary: #f9fafb;
+        --text-secondary: #e5e7eb;
+        --accent-color: #3b82f6;
+        --accent-hover: #60a5fa;
+        --card-bg: #1f2937;
+        --card-border: #374151;
+        --card-shadow: rgba(0, 0, 0, 0.5);
+        --input-bg: #374151;
+        --input-border: #4b5563;
+        --button-primary: #3b82f6;
+        --button-hover: #60a5fa;
+        --button-text: #ffffff;
+        --nav-bg: #111827;
+        --nav-shadow: rgba(0, 0, 0, 0.3);
+      }
+
+      /* Apply theme variables to elements */
+      body {
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+
+      .card,
+      .recommendation-item-card,
+      .hospital-suggestion-card {
+        background-color: var(--card-bg);
+        border-color: var(--card-border);
+        box-shadow: 0 2px 4px var(--card-shadow);
+      }
+
+      input,
+      textarea,
+      select {
+        background-color: var(--input-bg);
+        border-color: var(--input-border);
+        color: var(--text-primary);
+      }
+
+      .navbar {
+        background-color: var(--nav-bg);
+        box-shadow: 0 2px 4px var(--nav-shadow);
+      }
+
+      /* Fix for heading color in light mode */
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        color: var(--text-primary);
+      }
+
+      /* Global heading fix for light mode */
+      html:not(.dark) h1,
+      html:not(.dark) h2,
+      html:not(.dark) h3,
+      html:not(.dark) h4,
+      html:not(.dark) h5,
+      html:not(.dark) h6 {
+        color: var(--text-primary);
+      }
+
+      /* Exceptions for headings that should remain white regardless of theme */
+      .hero-section h1, 
+      [class*="bg-gradient"] h1,
+      [class*="bg-blue"] h1,
+      [class*="bg-indigo"] h1,
+      [class*="bg-purple"] h1,
+      [style*="background"] h1,
+      .text-white.hero-heading,
+      /* Some sections that explicitly need white text */
+      #hero-section h1 {
+        color: white !important;
+      }
+
+      /* Override for light theme specific headings */
+      html:not(.dark) .light\:text-gray-800 {
+        color: #1f2937 !important;
+      }
+
+      /* Footer and other sections with specific text colors */
+      footer h1,
+      footer h2,
+      footer h3,
+      footer h4,
+      footer h5,
+      footer h6 {
+        color: inherit;
+      }
+
+      /* Remove any hardcoded dark/light styles that might override theme variables */
+      .dark .bg-white,
+      .dark .bg-gray-100 {
+        background-color: var(--bg-primary) !important;
+      }
+
+      .dark .text-gray-800,
+      .dark .text-gray-900 {
+        color: var(--text-primary) !important;
+      }
+
+      .dark .border-gray-200,
+      .dark .border-gray-300 {
+        border-color: var(--card-border) !important;
+      }
+
+      /* Direct fix for white text on white background in light theme */
+      html:not(.dark)
+        h1.text-white:not([class*="hero-heading"]):not([class*="light:"]),
+      html:not(.dark)
+        h2.text-white:not([class*="hero-heading"]):not([class*="light:"]),
+      html:not(.dark)
+        h3.text-white:not([class*="hero-heading"]):not([class*="light:"]),
+      html:not(.dark)
+        h4.text-white:not([class*="hero-heading"]):not([class*="light:"]),
+      html:not(.dark)
+        h5.text-white:not([class*="hero-heading"]):not([class*="light:"]),
+      html:not(.dark)
+        h6.text-white:not([class*="hero-heading"]):not([class*="light:"]) {
+        color: var(--text-primary) !important;
+      }
+
+      /* Specific fixes for any remaining issues */
+      html:not(.dark)
+        [class*="text-white"]:not([class*="hero"]):not([class*="bg-"]):not(
+          [id*="hero"]
+        ):not(button):not(a) {
+        color: var(--text-primary) !important;
+      }
+
+      /* Override for dark blue sections in light theme */
+      html:not(.dark) .bg-blue-600 h1:not([class*="text-white"]),
+      html:not(.dark) .bg-blue-700 h1:not([class*="text-white"]),
+      html:not(.dark) .bg-indigo-600 h1:not([class*="text-white"]),
+      html:not(.dark) .bg-indigo-700 h1:not([class*="text-white"]) {
         color: white !important;
       }
     </style>
   </head>
-  <body class="bg-gray-50 min-h-screen flex flex-col">
+  <body
+    class="font-sans antialiased"
+    style="background-color: var(--bg-primary); color: var(--text-primary)"
+  >
     <!-- Navigation -->
     <nav
-      class="bg-white dark:bg-gray-800 shadow-lg sticky top-0 z-50 animate-fade-up"
+      class="shadow-md sticky top-0 z-50"
+      style="
+        background-color: var(--nav-bg);
+        box-shadow: 0 2px 4px var(--nav-shadow);
+      "
     >
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16">
@@ -262,7 +447,8 @@
             <div class="flex-shrink-0 flex items-center">
               <a
                 href="{{ url_for('index') }}"
-                class="text-2xl font-bold text-blue-600 hover:text-blue-700 transition-colors duration-300"
+                class="text-2xl font-bold transition-colors duration-300"
+                style="color: var(--accent-color)"
               >
                 CataraQt
               </a>
@@ -270,18 +456,34 @@
             <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
               <a
                 href="{{ url_for('index') }}"
-                class="nav-link border-transparent text-gray-500 dark:text-white hover:border-blue-500 hover:text-blue-600 dark:hover:text-blue-400 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-all duration-300 hover:-translate-y-0.5"
+                class="nav-link border-transparent inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-all duration-300 hover:-translate-y-0.5"
+                style="color: var(--text-secondary)"
               >
                 Home
               </a>
               {% if session.get('user_id') %}
               <a
                 href="{{ url_for('analyze_image') }}"
-                class="nav-link border-transparent text-gray-500 dark:text-white hover:border-blue-500 hover:text-blue-600 dark:hover:text-blue-400 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-all duration-300 hover:-translate-y-0.5"
+                class="nav-link border-transparent inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-all duration-300 hover:-translate-y-0.5"
+                style="color: var(--text-secondary)"
               >
                 Analyze
               </a>
+              <a
+                href="{{ url_for('history') }}"
+                class="nav-link border-transparent inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-all duration-300 hover:-translate-y-0.5"
+                style="color: var(--text-secondary)"
+              >
+                History
+              </a>
               {% endif %}
+              <a
+                href="{{ url_for('hospitals') }}"
+                class="nav-link border-transparent inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-all duration-300 hover:-translate-y-0.5"
+                style="color: var(--text-secondary)"
+              >
+                Eye Hospitals
+              </a>
             </div>
           </div>
 
@@ -290,13 +492,14 @@
             <!-- Theme Toggle -->
             <button
               id="theme-toggle"
-              class="nav-link text-gray-500 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 p-2 rounded-lg transition-all duration-300 hover:-translate-y-0.5"
+              class="nav-link p-2 rounded-lg transition-all duration-300 hover:-translate-y-0.5"
+              style="color: var(--text-secondary)"
               aria-label="Toggle dark mode"
             >
-              <!-- Sun icon -->
+              <!-- Sun icon (shown in dark mode) -->
               <svg
-                id="light-icon"
-                class="w-5 h-5 hidden"
+                id="sun-icon"
+                class="w-5 h-5 {% if session.get('theme') != 'dark' %}hidden{% endif %}"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -309,10 +512,10 @@
                   d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
                 ></path>
               </svg>
-              <!-- Moon icon -->
+              <!-- Moon icon (shown in light mode) -->
               <svg
-                id="dark-icon"
-                class="w-5 h-5"
+                id="moon-icon"
+                class="w-5 h-5 {% if session.get('theme') == 'dark' %}hidden{% endif %}"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -330,19 +533,42 @@
             {% if session.get('user_id') %}
             <!-- Logged-in menu items -->
             <span
-              class="text-gray-700 dark:text-white text-sm font-medium animate-slide-right"
+              class="text-sm font-medium animate-slide-right"
+              style="color: var(--text-primary)"
             >
               Welcome, {{ session.get('user_name', session.get('user_id')) }}
             </span>
             <a
               href="{{ url_for('dashboard') }}"
-              class="nav-link text-gray-500 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 hover:-translate-y-0.5"
+              class="nav-link px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 hover:-translate-y-0.5"
+              style="color: var(--text-secondary)"
             >
               Dashboard
             </a>
             <a
+              href="{{ url_for('profile') }}"
+              class="nav-link p-0 flex items-center focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-800 rounded-full"
+              aria-label="User Profile"
+            >
+              {% if session.get('user_profile_picture') %}
+              <img
+                class="h-8 w-8 rounded-full object-cover hover:opacity-80 transition-opacity duration-300"
+                src="{{ url_for('serve_upload', filename=session.get('user_profile_picture')) }}"
+                alt="User profile picture"
+              />
+              {% else %} {# Default SVG icon as inline image data #}
+              <img
+                class="h-8 w-8 rounded-full transition-colors duration-300"
+                style="color: var(--text-secondary)"
+                src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0iY3NzLWR6YWx2ZiI+PHBhdGggZD0iTTE2IDdjLTEuOTQgMC0zLjUgMS43OS0zLjUgNC41VjE0YTcgNyAwIDEgMCA3IDBoMCAxLjY4NmEyIDIgMCAwIDAtMS45ODEtMS43NTRsMCAuMDAxQTMuNSA0LjUgMCAwIDAgMTYgN3oiPjwvcGF0aD48cGF0aCBkPSJNNCAxMmMwIDQuNDIgMy41OCA4IDggOHMxLjU3LS41IDMuMDMtMS4zMCI+PC9wYXRoPjwvc3ZnPg=="
+                alt="Default profile icon"
+              />
+              {% endif %}
+            </a>
+            <a
               href="{{ url_for('logout') }}"
-              class="nav-link text-gray-500 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 hover:-translate-y-0.5"
+              class="nav-link px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 hover:-translate-y-0.5"
+              style="color: var(--text-secondary)"
             >
               Logout
             </a>
@@ -350,7 +576,8 @@
             <!-- Logged-out menu items -->
             <a
               href="{{ url_for('login') }}"
-              class="nav-link text-gray-500 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 hover:-translate-y-0.5"
+              class="nav-link px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 hover:-translate-y-0.5"
+              style="color: var(--text-secondary)"
             >
               Login
             </a>
@@ -366,32 +593,14 @@
       </div>
     </nav>
 
-    <!-- Profile Icon (completely separate, using forced right positioning) -->
-    {% if session.get('user_id') %}
-    <a href="{{ url_for('profile') }}" class="profile-button-right">
-      {% if session.get('user_profile_picture') %}
-      <img
-        class="h-8 w-8 rounded-full object-cover hover:ring-2 hover:ring-blue-500 hover:ring-offset-2 dark:hover:ring-offset-gray-800 transition-all duration-300"
-        src="{{ url_for('serve_upload', filename=session.get('user_profile_picture')) }}"
-        alt="User profile picture"
-      />
-      {% else %}
-      <img
-        class="h-8 w-8 rounded-full object-cover hover:ring-2 hover:ring-blue-500 hover:ring-offset-2 dark:hover:ring-offset-gray-800 transition-all duration-300"
-        src="data:image/svg+xml;base64,PHN2ZyBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgdmlld0JveD0iMCAwIDI0IDI0IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIyIiBkPSJNMTYgN2ExNSA0IDAgMTEtOCAwbCA0IDAgMTEtOCAwem0wIDdhNSA1IDAgMDA1IDV2MWEyIDIgMCAwMS0yIDJIMTAuOTg0YTIgMiAwIDAxLTEuOTg0LTEuNzU2bC0uMDAxLS4wMDRBNSA1IDAgMDAxNiAxNHoiLz48L3N2Zz4="
-        alt="User profile picture"
-      />
-      {% endif %}
-    </a>
-    {% endif %}
-
     <!-- Flash Messages -->
     {% with messages = get_flashed_messages(with_categories=true) %} {% if
     messages %}
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
       {% for category, message in messages %}
       <div
-        class="animate-slide-right rounded-md p-4 mb-4 {% if category == 'error' %}bg-red-100 text-red-700{% else %}bg-green-100 text-green-700{% endif %}"
+        class="animate-slide-right rounded-md p-4 mb-4"
+        style="background-color: {% if category == 'error' %}rgba(239, 68, 68, 0.1){% else %}rgba(16, 185, 129, 0.1){% endif %}; color: {% if category == 'error' %}#ef4444{% else %}#10b981{% endif %}; {% if request.cookies.get('theme') == 'dark' %}background-color: {% if category == 'error' %}rgba(239, 68, 68, 0.2){% else %}rgba(16, 185, 129, 0.2){% endif %}; color: {% if category == 'error' %}#f87171{% else %}#34d399{% endif %};{% endif %}"
       >
         {{ message }}
       </div>
@@ -405,15 +614,23 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-white mt-12 animate-fade-up">
+    <footer
+      class="mt-12 animate-fade-up"
+      style="
+        background-color: var(--bg-primary);
+        border-color: var(--card-border);
+      "
+    >
       <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
         <div
-          class="mt-8 border-t border-gray-200 pt-8 md:flex md:items-center md:justify-between"
+          class="mt-8 border-t pt-8 md:flex md:items-center md:justify-between"
+          style="border-color: var(--card-border)"
         >
           <div class="flex space-x-6 md:order-2">
             <a
               href="https://github.com/sreeshanth-soma/CataraQt"
-              class="text-gray-400 hover:text-gray-500 transition-colors duration-300"
+              class="hover:text-gray-500 transition-colors duration-300"
+              style="color: var(--text-secondary)"
             >
               <span class="sr-only">GitHub</span>
               <svg
@@ -430,7 +647,10 @@
               </svg>
             </a>
           </div>
-          <p class="mt-8 text-base text-gray-400 md:mt-0 md:order-1">
+          <p
+            class="mt-8 text-base md:mt-0 md:order-1"
+            style="color: var(--text-secondary)"
+          >
             &copy; 2024 CataraQt. All rights reserved.
           </p>
         </div>
@@ -441,51 +661,79 @@
 
     <!-- Dark mode script -->
     <script>
-      // Check for saved theme preference, otherwise use system preference
-      if (
-        localStorage.theme === "dark" ||
-        (!("theme" in localStorage) &&
-          window.matchMedia("(prefers-color-scheme: dark)").matches)
-      ) {
-        document.documentElement.classList.add("dark");
-        document.getElementById("light-icon").classList.remove("hidden");
-        document.getElementById("dark-icon").classList.add("hidden");
-      } else {
-        document.documentElement.classList.remove("dark");
-        document.getElementById("light-icon").classList.add("hidden");
-        document.getElementById("dark-icon").classList.remove("hidden");
-      }
+      document.addEventListener("DOMContentLoaded", function () {
+        // Get theme preference from localStorage or system preference
+        function getThemePreference() {
+          const savedTheme = localStorage.getItem("theme");
+          if (savedTheme) {
+            return savedTheme;
+          }
+          return window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light";
+        }
 
-      // Theme toggle button
-      document
-        .getElementById("theme-toggle")
-        .addEventListener("click", function () {
-          if (document.documentElement.classList.contains("dark")) {
-            document.documentElement.classList.remove("dark");
-            localStorage.theme = "light";
-            document.getElementById("light-icon").classList.add("hidden");
-            document.getElementById("dark-icon").classList.remove("hidden");
-          } else {
+        // Set a cookie
+        function setCookie(name, value, days) {
+          let expires = "";
+          if (days) {
+            const date = new Date();
+            date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+            expires = "; expires=" + date.toUTCString();
+          }
+          document.cookie = name + "=" + (value || "") + expires + "; path=/";
+        }
+
+        // Sync theme with server
+        function syncThemeWithServer(theme) {
+          fetch("/set-theme", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ theme: theme }),
+          }).catch((error) => console.error("Error syncing theme:", error));
+        }
+
+        // Apply theme to HTML and document elements
+        function setTheme(theme) {
+          if (theme === "dark") {
             document.documentElement.classList.add("dark");
-            localStorage.theme = "dark";
-            document.getElementById("light-icon").classList.remove("hidden");
-            document.getElementById("dark-icon").classList.add("hidden");
+            document.body.classList.add("dark");
+            document.getElementById("sun-icon").classList.remove("hidden");
+            document.getElementById("moon-icon").classList.add("hidden");
+          } else {
+            document.documentElement.classList.remove("dark");
+            document.body.classList.remove("dark");
+            document.getElementById("sun-icon").classList.add("hidden");
+            document.getElementById("moon-icon").classList.remove("hidden");
           }
+          localStorage.setItem("theme", theme);
+          setCookie("theme", theme, 365); // Store in cookie for 1 year
+          syncThemeWithServer(theme); // Sync with server
+        }
 
-          // If Vanta.js is initialized, update its colors
-          if (window.VANTA) {
-            const currentEffect = window.currentVantaEffect;
-            if (currentEffect) {
-              // We don't need to set background color here,
-              // let the Vanta effect handle it based on its config.
-              // const isDark =
-              //   document.documentElement.classList.contains("dark");
-              // currentEffect.setOptions({
-              //   backgroundColor: isDark ? 0x151515 : 0x202428,
-              // });
+        // Initialize theme
+        const currentTheme = getThemePreference();
+        setTheme(currentTheme);
+
+        // Handle theme toggle button click
+        document
+          .getElementById("theme-toggle")
+          .addEventListener("click", function () {
+            const isDark = document.documentElement.classList.contains("dark");
+            setTheme(isDark ? "light" : "dark");
+          });
+
+        // Listen for system theme changes
+        window
+          .matchMedia("(prefers-color-scheme: dark)")
+          .addEventListener("change", function (e) {
+            if (!localStorage.getItem("theme")) {
+              setTheme(e.matches ? "dark" : "light");
             }
-          }
-        });
+          });
+      });
     </script>
   </body>
 </html>

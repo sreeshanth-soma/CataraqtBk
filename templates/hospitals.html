@@ -1,0 +1,325 @@
+{% extends "base.html" %}
+{% block title %}Eye Hospitals - CataraQt{% endblock %}
+
+{% block head_extra %}
+<style>
+  /* Entrance animation */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-in-element {
+    animation: fadeIn 0.5s ease-out forwards;
+    opacity: 0; /* Start hidden */
+  }
+
+  /* Staggered animation delay */
+  {% for i in range(1, 10) %}
+  .delay-{{ i * 100 }} { animation-delay: {{ i * 0.1 }}s; }
+  {% endfor %}
+  
+  /* Active filter button style */
+  .filter-button.active {
+    background-color: #4f46e5 !important; /* Equivalent to bg-indigo-600 (Tailwind v3+) */
+    color: white !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    transform: translateY(-2px);
+  }
+  
+  .filter-button {
+      transition: all 0.3s ease;
+  }
+  
+  .filter-button:hover:not(.active) {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  /* Card hover effect */
+  .hospital-card:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    transform: translateY(-5px) scale(1.02);
+  }
+  .hospital-card {
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
+  
+  /* Rating stars alignment */
+  .rating-stars svg { vertical-align: middle; }
+
+  /* Simplified Image container */
+  .hospital-image-placeholder {
+      height: 13rem; /* h-52 */
+      background-color: #f3f4f6; /* bg-gray-100 */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden; /* Ensure image fits */
+  }
+  .dark .hospital-image-placeholder {
+       background-color: #374151; /* dark:bg-gray-700 */
+  }
+  .hospital-image-placeholder img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover; /* Cover the area */
+  }
+
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12">
+  <!-- Header Section -->
+  <div class="text-center mb-16 fade-in-element">
+    <div class="inline-block bg-blue-100 dark:bg-blue-900/30 rounded-full px-4 py-1.5 mb-4">
+        <span class="text-sm font-semibold text-blue-600 dark:text-blue-400 uppercase tracking-wider">Find Care</span>
+    </div>
+    <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-4">
+      Top Eye Hospitals
+    </h1>
+    <p class="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+      Discover leading hospitals specializing in cataract surgery and advanced eye care. Use the filters below to narrow your search.
+    </p>
+  </div>
+
+  <!-- Hospital Filters -->
+  <div class="mb-12 flex flex-wrap gap-3 justify-center fade-in-element delay-100" id="hospital-filters">
+    <button data-filter-type="all" 
+      class="filter-button px-5 py-2 text-sm font-medium rounded-full shadow-sm transition-all duration-300 active bg-indigo-600 text-white">
+      All Hospitals
+    </button>
+    <button data-filter-type="location" data-filter-value="India"
+      class="filter-button px-5 py-2 text-sm font-medium rounded-full shadow-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-300">
+      India
+    </button>
+    <button data-filter-type="location" data-filter-value="USA"
+      class="filter-button px-5 py-2 text-sm font-medium rounded-full shadow-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-300">
+      USA
+    </button>
+    <button data-filter-type="location" data-filter-value="UK"
+      class="filter-button px-5 py-2 text-sm font-medium rounded-full shadow-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-300">
+      UK
+    </button>
+    <button data-filter-type="location" data-filter-value="Singapore"
+      class="filter-button px-5 py-2 text-sm font-medium rounded-full shadow-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-300">
+      Singapore
+    </button>
+    <button data-filter-type="rating" data-filter-value="high"
+      class="filter-button px-5 py-2 text-sm font-medium rounded-full shadow-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-300">
+      Highest Rated (4.8+)
+    </button>
+  </div>
+
+  <!-- Hospital List -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 fade-in-element delay-200" id="hospital-list-container">
+    {% for hospital in hospitals %}
+    <div
+      class="hospital-card bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden flex flex-col"
+      data-location="{{ hospital.location }}" 
+      data-rating="{{ hospital.rating }}"
+      style="opacity: 0;" /* Start hidden for animation */
+    >
+      <!-- Simplified Image Container -->
+      <div class="hospital-image-placeholder">
+        {% if hospital.image_url %}
+          <img src="{{ hospital.image_url }}" alt="{{ hospital.name }}" loading="lazy">
+        {% else %}
+          <!-- Simple Fallback SVG if image_url is missing -->
+          <svg class="w-20 h-20 text-gray-400 dark:text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+          </svg>
+        {% endif %}
+      </div>
+      
+      <!-- Hospital Info -->
+      <div class="p-6 flex flex-col flex-grow">
+        <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-1">{{ hospital.name }}</h2>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mb-4 flex items-center">
+           <svg class="w-4 h-4 mr-1.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+           {{ hospital.location }}
+        </p>
+        
+        <!-- Rating -->
+        <div class="flex items-center mb-4 rating-stars">
+          <div class="flex text-yellow-400 mr-2">
+            {% set full_stars = hospital.rating | int %}
+            {% set half_star = hospital.rating - full_stars >= 0.5 %}
+            {% set empty_stars = 5 - full_stars - (1 if half_star else 0) %}
+            
+            {% for _ in range(full_stars) %}
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
+            {% endfor %}
+            
+            {% if half_star %}
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" fill-opacity="0.5"/><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0V15z"/></svg>
+            {% endif %}
+            
+            {% for _ in range(empty_stars) %}
+            <svg class="w-4 h-4 fill-current text-gray-300 dark:text-gray-600" viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
+            {% endfor %}
+          </div>
+          <span class="text-sm text-gray-600 dark:text-gray-400">({{ hospital.rating }})</span>
+        </div>
+        
+        <!-- Specialization -->
+        <div class="mb-4 flex-grow">
+          <h3 class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Specialization</h3>
+          <p class="text-sm text-gray-700 dark:text-gray-300">{{ hospital.specialization }}</p>
+        </div>
+        
+        <!-- Contact Info -->
+        <div class="mb-5">
+          <h3 class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Contact</h3>
+          <p class="text-sm text-gray-700 dark:text-gray-300">{{ hospital.phone }}</p>
+        </div>
+        
+        <!-- Visit Website Button -->
+        <div class="mt-auto">
+          <a href="{{ hospital.website }}" target="_blank" rel="noopener noreferrer" 
+             class="block w-full text-center btn-primary text-sm font-medium">
+            Visit Website
+          </a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Empty State -->
+  <div id="empty-state" class="text-center p-16 bg-gray-50 dark:bg-gray-800 rounded-lg mt-8 hidden" style="opacity: 0;">
+      <svg class="w-16 h-16 mx-auto text-gray-400 dark:text-gray-500 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+      </svg>
+      <h3 class="text-xl font-medium text-gray-900 dark:text-white mb-2">No hospitals match your criteria</h3>
+      <p class="text-gray-600 dark:text-gray-300">Try selecting a different filter or click "All Hospitals".</p>
+  </div>
+
+  <!-- Information about treatment -->
+  <div class="mt-20 bg-gradient-to-r from-blue-50 to-indigo-100 dark:from-gray-800 dark:to-gray-900 rounded-xl p-8 lg:p-12 fade-in-element delay-300">
+    <h2 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-6">Understanding Cataract Treatment</h2>
+    <div class="prose prose-lg dark:prose-invert max-w-none text-gray-700 dark:text-gray-300 space-y-4">
+      <p class="dark:text-gray-300">Cataracts occur when the natural lens of the eye becomes cloudy, impairing vision. Modern cataract surgery is a highly common and effective procedure to restore clear sight.</p>
+      
+      <h3 class="text-xl font-semibold mt-6 text-gray-800 dark:text-white">What happens during surgery?</h3>
+      <ul class="list-disc pl-6 space-y-2">
+        <li>The procedure is quick, typically lasting under 30 minutes.</li>
+        <li>Performed outpatient under local anesthesia, meaning you go home the same day.</li>
+        <li>The surgeon removes the cloudy lens and replaces it with a clear artificial Intraocular Lens (IOL).</li>
+        <li>Recovery is usually fast, with significant vision improvement often noticed within days.</li>
+      </ul>
+      
+      <h3 class="text-xl font-semibold mt-6 text-gray-800 dark:text-white">Choosing the Right Hospital:</h3>
+      <ul class="list-disc pl-6 space-y-2">
+        <li>Look for experienced surgeons with high success rates.</li>
+        <li>Consider the availability of advanced technology and IOL options.</li>
+        <li>Inquire about comprehensive post-operative care and follow-up protocols.</li>
+        <li>Check patient reviews and hospital accreditations.</li>
+        <li>Verify insurance coverage and understand potential costs.</li>
+      </ul>
+      <p class="mt-4 italic dark:text-gray-300">Always consult with a qualified ophthalmologist for personalized advice and treatment options.</p>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const filterButtons = document.querySelectorAll('#hospital-filters button');
+    const hospitalCards = document.querySelectorAll('.hospital-card');
+    const hospitalContainer = document.getElementById('hospital-list-container');
+    const emptyState = document.getElementById('empty-state');
+
+    function applyCardAnimations() {
+        let delay = 0;
+        hospitalCards.forEach(card => {
+            const shouldBeVisible = card.style.display !== 'none';
+            if (shouldBeVisible) {
+                card.style.opacity = 0;
+                card.style.transform = 'translateY(10px)';
+                card.classList.add('fade-in-element');
+                card.style.animationDelay = `${delay}ms`;
+                delay += 50;
+            }
+        });
+    }
+
+    applyCardAnimations(); // Apply initial fade-in
+
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const filterType = this.dataset.filterType;
+            const filterValue = this.dataset.filterValue;
+            let visibleCount = 0;
+
+            // Update button styles
+            filterButtons.forEach(btn => {
+                btn.classList.remove('active', 'bg-indigo-600', 'text-white');
+                btn.classList.add('bg-gray-100', 'dark:bg-gray-700', 'text-gray-700', 'dark:text-gray-200');
+            });
+            this.classList.add('active', 'bg-indigo-600', 'text-white');
+            this.classList.remove('bg-gray-100', 'dark:bg-gray-700', 'text-gray-700', 'dark:text-gray-200');
+
+            // Filter hospitals
+            hospitalCards.forEach(card => {
+                let showCard = false;
+                if (filterType === 'all') {
+                    showCard = true;
+                } else if (filterType === 'location') {
+                    const location = card.dataset.location.toLowerCase();
+                    if (location.includes(filterValue.toLowerCase())) {
+                        showCard = true;
+                    }
+                } else if (filterType === 'rating') {
+                    const rating = parseFloat(card.dataset.rating);
+                    if (rating >= 4.8) {
+                        showCard = true;
+                    }
+                }
+                
+                card.classList.remove('fade-in-element');
+                card.style.animation = 'none';
+
+                if (showCard) {
+                    card.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                    card.style.display = ''; 
+                    setTimeout(() => { 
+                        card.style.opacity = '1';
+                        card.style.transform = 'scale(1)';
+                    }, 10); 
+                    visibleCount++;
+                } else {
+                    card.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                    card.style.opacity = '0';
+                    card.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        if (card.style.opacity === '0') { 
+                           card.style.display = 'none';
+                        }
+                    }, 300); 
+                }
+            });
+
+            // Show/hide empty state message
+            if (visibleCount === 0) {
+                emptyState.style.display = '';
+                emptyState.style.transition = 'opacity 0.3s ease';
+                 setTimeout(() => { 
+                      emptyState.classList.remove('hidden'); // Should not be needed if display works
+                      emptyState.style.opacity = '1';
+                 },10);
+            } else {
+                 emptyState.style.transition = 'opacity 0.3s ease';
+                 emptyState.style.opacity = '0';
+                 setTimeout(() => {
+                     // emptyState.classList.add('hidden'); // Should not be needed if display works
+                     emptyState.style.display = 'none';
+                 }, 300);
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

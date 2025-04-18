@@ -1,0 +1,549 @@
+{% extends "base.html" %} {% block title %}Analysis Results - CataraQt{%
+endblock %} {% block head_extra %}
+<style>
+  /* Enhanced visualization images */
+  .viz-image {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    border-radius: 0.75rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+      0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e5e7eb;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .viz-image:hover {
+    transform: scale(1.02);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+      0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+
+  /* Card styles */
+  .result-card {
+    background: white;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+      0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border: 1px solid #e5e7eb;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .dark .result-card {
+    background: #1f2937;
+    border-color: #374151;
+  }
+
+  .result-card-content {
+    padding: 1.5rem;
+    flex-grow: 1;
+  }
+
+  /* Recommendation cards */
+  .recommendation-card-user {
+    display: block;
+    border-radius: 0.75rem;
+    border: 1px solid #93c5fd;
+    background-color: #eff6ff;
+    padding: 1rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    position: relative;
+    padding-left: 1.25rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .dark .recommendation-card-user {
+    border-color: #1e40af;
+    background-color: #1e293b;
+  }
+
+  .recommendation-card-user:before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 0.375rem;
+    background-color: #3b82f6;
+  }
+
+  .dark .recommendation-card-user:before {
+    background-color: #2563eb;
+  }
+
+  .recommendation-card-user:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    border-color: #60a5fa;
+  }
+
+  .dark .recommendation-card-user:hover {
+    border-color: #1d4ed8;
+  }
+
+  /* Hospital cards */
+  .user-provided-card {
+    display: block;
+    border-radius: 0.75rem;
+    border: 2px solid #d1d5db;
+    background: white;
+    padding: 1rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .dark .user-provided-card {
+    border-color: #4b5563;
+    background: #1f2937;
+  }
+
+  .user-provided-card:hover {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    border-color: #ffa500;
+  }
+
+  .dark .user-provided-card:hover {
+    border-color: #6b7280;
+  }
+
+  .user-provided-title {
+    margin-top: 0.25rem;
+    font-weight: 600;
+    font-size: 1rem;
+    color: #111827;
+  }
+
+  .dark .user-provided-title {
+    color: white;
+  }
+
+  .user-provided-text {
+    margin-top: 0.25rem;
+    display: block;
+    font-size: 0.875rem;
+    color: #4b5563;
+  }
+
+  .dark .user-provided-text {
+    color: #d1d5db;
+  }
+
+  .user-provided-rating {
+    display: inline-block;
+    background-color: #fef3c7;
+    color: #92400e;
+    font-size: 0.75rem;
+    font-weight: 700;
+    border-radius: 9999px;
+    padding: 0.25rem 0.75rem;
+    margin-top: 0.5rem;
+  }
+
+  .dark .user-provided-rating {
+    background-color: rgba(234, 179, 8, 0.2);
+    color: #fcd34d;
+  }
+
+  /* Section titles */
+  .section-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #ffa500;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #ffa500;
+  }
+
+  .dark .section-title {
+    color: #ffa500;
+    border-bottom-color: #ffa500;
+  }
+
+  /* Buttons */
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.625rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    border-radius: 0.5rem;
+    background-color: #3b82f6;
+    color: white;
+    transition: background-color 0.3s ease;
+  }
+
+  .btn-primary:hover {
+    background-color: #2563eb;
+  }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.625rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    border-radius: 0.5rem;
+    background-color: #e5e7eb;
+    color: #111827;
+    transition: background-color 0.3s ease;
+  }
+
+  .btn-secondary:hover {
+    background-color: #d1d5db;
+  }
+
+  .dark .btn-secondary {
+    background-color: #374151;
+    color: white;
+  }
+
+  .dark .btn-secondary:hover {
+    background-color: #4b5563;
+  }
+</style>
+{% endblock %} {% block content %}
+<div
+  class="container"
+  style="max-width: 1200px; margin: 0 auto; padding: 2rem 1rem"
+>
+  <div style="text-align: center; margin-bottom: 3rem">
+    <h1
+      style="
+        font-size: 2.25rem;
+        font-weight: 800;
+        color: #ffa500;
+        margin-bottom: 0.75rem;
+      "
+    >
+      Analysis Results
+    </h1>
+    <p style="font-size: 1rem; color: #6b7280">
+      Review the findings from your eye image analysis.
+    </p>
+  </div>
+
+  <!-- Main Grid: Summary/Recs side-by-side on large screens -->
+  <div
+    style="
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+      margin-bottom: 2.5rem;
+    "
+  >
+    <!-- Column 1: Summary Card -->
+    <div class="result-card">
+      <div class="result-card-content">
+        <h2 class="section-title">Summary</h2>
+        <div style="display: grid; grid-template-columns: 1fr; gap: 1.5rem">
+          <!-- Prediction -->
+          <div
+            style="
+              padding: 1.5rem;
+              border-radius: 0.75rem;
+              background-color: #f9fafb;
+              border: 1px solid #e5e7eb;
+            "
+          >
+            <p
+              style="
+                font-size: 0.875rem;
+                font-weight: 500;
+                color: #6b7280;
+                margin-bottom: 0.5rem;
+              "
+            >
+              Prediction
+            </p>
+            <p
+              style="font-size: 1.875rem; font-weight: 700; {% if 'No' in results.prediction %}color: #16a34a;{% else %}color: #dc2626;{% endif %}"
+            >
+              {{ results.prediction }}
+            </p>
+          </div>
+          <!-- Confidence -->
+          <div
+            style="
+              padding: 1.5rem;
+              border-radius: 0.75rem;
+              background-color: #f9fafb;
+              border: 1px solid #e5e7eb;
+            "
+          >
+            <p
+              style="
+                font-size: 0.875rem;
+                font-weight: 500;
+                color: #6b7280;
+                margin-bottom: 0.5rem;
+              "
+            >
+              {{ 'Cataract Likelihood' if 'Cataract' in results.prediction else
+              'Confidence (No Cataract)' }}
+            </p>
+            <p style="font-size: 1.875rem; font-weight: 700; color: #111827">
+              {{ "%.1f"|format(results.confidence * 100) }}%
+            </p>
+            <div
+              style="
+                width: 100%;
+                background-color: #e5e7eb;
+                border-radius: 9999px;
+                height: 0.625rem;
+                margin-top: 0.75rem;
+              "
+            >
+              <div
+                style="height: 0.625rem; border-radius: 9999px; {% if 'No' in results.prediction %}background-color: #16a34a;{% else %}background-color: #dc2626;{% endif %}"
+                style="width: {{ results.confidence * 100 }}%"
+              ></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Column 2: Recommendations & Hospitals Card -->
+    <div class="result-card">
+      <div class="result-card-content">
+        <h2 class="section-title">Next Steps</h2>
+
+        <!-- Recommendations -->
+        <div style="margin-bottom: 2rem">
+          <h3
+            style="
+              font-size: 1.25rem;
+              font-weight: 600;
+              color: #ffa500;
+              margin-bottom: 1rem;
+            "
+          >
+            Recommendations
+          </h3>
+          <div style="display: grid; gap: 0.75rem">
+            {% for recommendation in results.recommendations %}
+            <div class="recommendation-card-user">
+              <p class="user-provided-text">{{ recommendation }}</p>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <!-- Hospitals -->
+        {% if results.recommended_hospitals and 'Cataract' in results.prediction
+        %}
+        <div style="padding-top: 1.5rem; border-top: 1px solid #e5e7eb">
+          <h3
+            style="
+              font-size: 1.25rem;
+              font-weight: 600;
+              color: #ffa500;
+              margin-bottom: 1rem;
+            "
+          >
+            Suggested Hospitals
+          </h3>
+          <div
+            style="
+              display: grid;
+              grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+              gap: 1rem;
+            "
+          >
+            {% for hospital in results.recommended_hospitals[:3] %}
+            <a
+              href="{{ hospital.website }}"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="user-provided-card"
+            >
+              <h2 class="user-provided-title">{{ hospital.name }}</h2>
+              <div
+                style="
+                  flex-grow: 1;
+                  margin-top: 0.5rem;
+                  display: grid;
+                  gap: 0.375rem;
+                "
+              >
+                <p class="user-provided-text">
+                  <span class="hospital-card-label">Location:</span>
+                  {{ hospital.location }}
+                </p>
+                <p class="user-provided-text">
+                  <span class="hospital-card-label">Specialization:</span>
+                  {{ hospital.specialization }}
+                </p>
+              </div>
+              <div style="margin-top: 0.75rem">
+                <span class="user-provided-rating"
+                  >{{ hospital.rating }} ★</span
+                >
+              </div>
+            </a>
+            {% endfor %}
+          </div>
+          <div style="margin-top: 1.25rem; text-align: right">
+            <a
+              href="{{ url_for('hospitals') }}"
+              style="
+                display: inline-flex;
+                align-items: center;
+                font-size: 0.875rem;
+                font-weight: 500;
+                color: #2563eb;
+                text-decoration: underline;
+              "
+            >
+              View all hospitals
+              <svg
+                style="width: 1rem; height: 1rem; margin-left: 0.25rem"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M17 8l4 4m0 0l-4 4m4-4H3"
+                ></path>
+              </svg>
+            </a>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <!-- End Main Grid -->
+
+  <!-- Visualizations Card -->
+  <div class="result-card">
+    <div class="result-card-content">
+      <h2 class="section-title">Visualizations</h2>
+      <div
+        style="
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 1.5rem 2rem;
+        "
+      >
+        {% if results.visualizations.original %}
+        <div style="text-align: center">
+          <p style="font-weight: 500; margin-bottom: 0.5rem; color: #4b5563">
+            Original Image
+          </p>
+          <img
+            src="data:image/png;base64,{{ results.visualizations.original }}"
+            alt="Original Uploaded Image"
+            class="viz-image"
+          />
+        </div>
+        {% endif %} {% if results.visualizations.edges %}
+        <div style="text-align: center">
+          <p style="font-weight: 500; margin-bottom: 0.5rem; color: #4b5563">
+            Edge Detection
+          </p>
+          <img
+            src="data:image/png;base64,{{ results.visualizations.edges }}"
+            alt="Edge Detection Visualization"
+            class="viz-image"
+          />
+        </div>
+        {% endif %} {% if results.visualizations.heatmap %}
+        <div style="text-align: center">
+          <p style="font-weight: 500; margin-bottom: 0.5rem; color: #4b5563">
+            Activation Map
+          </p>
+          <img
+            src="data:image/png;base64,{{ results.visualizations.heatmap }}"
+            alt="Activation Map Visualization"
+            class="viz-image"
+          />
+        </div>
+        {% endif %} {% if results.visualizations.overlay %}
+        <div style="text-align: center">
+          <p style="font-weight: 500; margin-bottom: 0.5rem; color: #4b5563">
+            Overlay
+          </p>
+          <img
+            src="data:image/png;base64,{{ results.visualizations.overlay }}"
+            alt="Overlay Visualization"
+            class="viz-image"
+          />
+        </div>
+        {% endif %}
+      </div>
+      {% if not results.visualizations.heatmap and not
+      results.visualizations.overlay %}
+      <p
+        style="
+          font-size: 0.875rem;
+          color: #6b7280;
+          margin-top: 1.25rem;
+          text-align: center;
+          font-style: italic;
+        "
+      >
+        Activation map and overlay visualizations are not available for this
+        model type.
+      </p>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div
+    style="
+      margin-top: 2.5rem;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      align-items: center;
+    "
+  >
+    <a href="{{ url_for('analyze_image') }}" class="btn-secondary">
+      <svg
+        style="width: 1.25rem; height: 1.25rem; margin-right: 0.5rem"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+        ></path>
+      </svg>
+      Analyze Another
+    </a>
+    <a href="{{ url_for('history') }}" class="btn-primary">
+      <svg
+        style="width: 1.25rem; height: 1.25rem; margin-right: 0.5rem"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
+        ></path>
+      </svg>
+      View History
+    </a>
+  </div>
+</div>
+{% endblock %}

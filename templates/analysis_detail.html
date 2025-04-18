@@ -53,43 +53,88 @@ endblock %} {% block content %}
             {{ "%.2f"|format(analysis.confidence * 100) }}%
           </p>
         </div>
-        <div class="p-4 rounded-lg bg-gray-50 dark:bg-gray-700">
-          <h3 class="text-lg font-semibold mb-3 text-gray-900 dark:text-white">
+        <div class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow-md">
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">
             Recommendations
           </h3>
-          {% if recommendations %}
           <ul
-            class="list-disc list-inside space-y-2 text-gray-700 dark:text-gray-300"
+            class="list-disc list-inside space-y-1 text-gray-700 dark:text-gray-300"
           >
-            {% for rec in recommendations %}
-            <li>{{ rec }}</li>
+            {% for recommendation in recommendations %}
+            <li>{{ recommendation }}</li>
             {% endfor %}
           </ul>
-          {% else %}
-          <p class="text-gray-500 dark:text-gray-400">
-            No specific recommendations available.
-          </p>
-          {% endif %}
         </div>
+
+        {% if recommended_hospitals and analysis.prediction == "Cataract
+        Detected" %}
+        <div class="p-4 bg-white dark:bg-gray-700 rounded-lg shadow-md mt-4">
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+            Recommended Hospitals
+          </h3>
+          <div class="space-y-3">
+            {% for hospital in recommended_hospitals[:3] %}
+            <div
+              class="flex items-center p-3 border border-gray-200 dark:border-gray-600 rounded-lg"
+            >
+              <div class="flex-shrink-0 mr-3">
+                <svg
+                  class="w-6 h-6 text-blue-500"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                  ></path>
+                </svg>
+              </div>
+              <div class="flex-1">
+                <h4 class="font-semibold text-gray-800 dark:text-white">
+                  {{ hospital.name }}
+                </h4>
+                <p class="text-sm text-gray-600 dark:text-gray-300">
+                  {{ hospital.location }}
+                </p>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          <div class="mt-4">
+            <a
+              href="{{ url_for('hospitals') }}"
+              class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium"
+            >
+              View all hospitals →
+            </a>
+          </div>
+        </div>
+        {% endif %}
       </div>
     </div>
 
     <div class="mt-8 text-center">
       <a
         href="{{ url_for('history') }}"
-        class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-5 rounded-md transition-colors duration-300"
+        class="btn-secondary inline-flex items-center"
       >
         <svg
+          class="w-4 h-4 mr-2"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
-          class="h-5 w-5 inline-block mr-1 -mt-1"
-          viewBox="0 0 20 20"
-          fill="currentColor"
         >
           <path
-            fill-rule="evenodd"
-            d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
-            clip-rule="evenodd"
-          />
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M10 19l-7-7m0 0l7-7m-7 7h18"
+          ></path>
         </svg>
         Back to History
       </a>
