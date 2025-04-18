@@ -106,7 +106,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 📝 License
 
-[Your chosen license]
+CataraQt is available under [Your chosen license]
 
 ## 📧 Contact
 
