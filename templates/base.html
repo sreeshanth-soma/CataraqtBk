@@ -14,8 +14,17 @@
     />
     <link
       rel="icon"
-      href="{{ url_for('static', filename='img/favicon.ico') }}"
-      type="image/x-icon"
+      href="{{ url_for('static', filename='images/logo/logo.jpg') }}"
+      type="image/jpeg"
+    />
+    <link
+      rel="shortcut icon"
+      href="{{ url_for('static', filename='images/logo/logo.jpg') }}"
+      type="image/jpeg"
+    />
+    <link
+      rel="apple-touch-icon"
+      href="{{ url_for('static', filename='images/logo/logo.jpg') }}"
     />
     {% block head_extra %}{% endblock %}
     <style>
