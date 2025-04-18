@@ -503,6 +503,16 @@
         color: #1f2937 !important;
       }
 
+      /* Fix for the Dashboard heading in light mode */
+      html:not(.dark) h1.text-white.mb-6,
+      html:not(.dark) h1.text-white.mb-8,
+      html:not(.dark) .dashboard-header h1,
+      html:not(.dark) h1.dashboard-title,
+      html:not(.dark)
+        h1:not([class*="hero"]):not([class*="bg-"]):not([id*="hero"]) {
+        color: #111827 !important; /* Almost black for maximum visibility */
+      }
+
       /* Fix for file upload area in light mode */
       html:not(.dark) .bg-gray-50,
       html:not(.dark) .dark\:bg-gray-700 {
