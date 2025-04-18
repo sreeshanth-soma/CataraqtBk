@@ -141,7 +141,7 @@ def technology_details():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if 'user_id' in session:
-        return redirect(url_for('index'))
+        return redirect(url_for('dashboard'))
         
     if request.method == 'POST':
         username = request.form.get('username')
@@ -156,7 +156,7 @@ def login():
             if user.profile_picture:
                 session['user_profile_picture'] = user.profile_picture
             flash('Logged in successfully!', 'success')
-            return redirect(url_for('index'))
+            return redirect(url_for('dashboard'))
         else:
             flash('Invalid username or password', 'error')
     
