@@ -506,12 +506,21 @@ def check_theme():
         session['theme'] = request.cookies.get('theme')
 
 if __name__ == '__main__':
-    # REMOVED folder check from here 
-    # if not os.path.exists(app.config['UPLOAD_FOLDER']):
-    #     os.makedirs(app.config['UPLOAD_FOLDER'])
-        
-    with app.app_context():
-        db.create_all()
-        setup_app()  # Run setup tasks
-        
-    app.run(debug=True, host='0.0.0.0', port=5001) 
+    try:
+        with app.app_context():
+            print("Attempting to create database tables...")
+            db.create_all()
+            print("Database tables check/creation complete.")
+            print("Running setup_app...")
+            setup_app()  # Run setup tasks
+            print("setup_app finished.")
+            
+        print("Starting Flask development server...")
+        # Use debug=False for testing potential startup hangs, True for more error info
+        app.run(debug=True, host='0.0.0.0', port=5001)
+    except Exception as e:
+        print(f"\n{'*'*20} ERROR DURING STARTUP {'*'*20}", file=sys.stderr)
+        print(f"An error occurred: {e}", file=sys.stderr)
+        import traceback
+        traceback.print_exc(file=sys.stderr)
+        print(f"{'*'*58}", file=sys.stderr) 
